@@ -86,9 +86,42 @@ defineEmits([
   border-radius: 12px;
 }
 
+.text-field-mobile :deep(.v-field__input) {
+  outline: none !important;
+}
+
+.text-field-mobile :deep(.v-field):focus-within {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.text-field-mobile :deep(.v-field__outline) {
+  outline: none !important;
+}
+
+/* Remove blue focus ring/outline from the entire field */
+.text-field-mobile :deep(.v-field--focused) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.text-field-mobile :deep(.v-field__field) {
+  outline: none !important;
+}
+
+.text-field-mobile :deep(.v-input__details) {
+  outline: none !important;
+}
+
+.text-field-mobile:focus-within {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 @media (max-width: 640px) {
   .text-field-mobile :deep(.v-field__input) {
     font-size: 16px; /* Prevents zoom on iOS */
+    outline: none !important;
   }
 }
 </style>
