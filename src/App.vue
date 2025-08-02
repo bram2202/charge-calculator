@@ -64,56 +64,104 @@ const handleReset = () => {
 
 <template>
   <v-app>
-    <v-main>
-      <v-container class="max-w-4xl mx-auto py-8">
-        <v-card class="mx-auto" max-width="800">
-          <v-card-title class="text-center bg-gradient-to-r from-blue-500 to-green-500 text-white">
-            <div class="flex items-center justify-center gap-3">
-              <h1 class="text-3xl font-bold text-[#1e92d7]">EV Charge Calculator</h1>
+    <v-main class="main-background">
+      <v-container class="max-w-6xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+        <div class="w-full max-w-4xl mx-auto">
+          <!-- Header -->
+          <div class="text-center mb-6 sm:mb-8">
+            <div class="inline-flex items-center justify-center gap-2 sm:gap-3 mb-4">
+              <v-icon icon="mdi-ev-station" size="32" class="text-blue-600 sm:text-4xl" />
+              <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+                EV Charge Calculator
+              </h1>
             </div>
-          </v-card-title>
+            <p class="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto px-4">
+              Calculate and compare charging costs for your electric or hybrid vehicle
+            </p>
+          </div>
 
-          <v-card-text class="p-6">
-            <!-- Mode Selection -->
-            <ModeSelector v-model="mode" />
+          <!-- Main Card -->
+          <v-card class="mx-auto shadow-xl border-0 rounded-xl sm:rounded-2xl overflow-hidden">
+            <v-card-text class="p-4 sm:p-6 lg:p-8">
+              <!-- Mode Selection -->
+              <div class="mb-6 sm:mb-8">
+                <ModeSelector v-model="mode" />
+              </div>
 
-            <v-row>
-              <!-- Basic EV Inputs -->
-              <v-col cols="12" md="6">
-                <ChargingDetailsCard v-model:batteryCapacity="batteryCapacity" v-model:pricePerKWh="pricePerKWh"
-                  v-model:feeType="feeType" v-model:startingFee="startingFee"
-                  v-model:transactionFeePercent="transactionFeePercent" />
-              </v-col>
+              <!-- Input Cards Grid -->
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                <!-- Basic EV Inputs -->
+                <div class="w-full mb-8" >
+                  <ChargingDetailsCard 
+                    v-model:batteryCapacity="batteryCapacity" 
+                    v-model:pricePerKWh="pricePerKWh"
+                    v-model:feeType="feeType" 
+                    v-model:startingFee="startingFee"
+                    v-model:transactionFeePercent="transactionFeePercent" 
+                  />
+                </div>
 
-              <!-- Hybrid Mode Inputs -->
-              <v-col v-if="mode === 'Hybrid'" cols="12" md="6">
-                <PetrolComparisonCard v-model:petrolPrice="petrolPrice" v-model:petrolUsage="petrolUsage"
-                  v-model:kwhUsage="kwhUsage" />
-              </v-col>
+                <!-- Hybrid Mode Inputs -->
+                <div v-if="mode === 'Hybrid'" class="w-full">
+                  <PetrolComparisonCard 
+                    v-model:petrolPrice="petrolPrice" 
+                    v-model:petrolUsage="petrolUsage"
+                    v-model:kwhUsage="kwhUsage" 
+                  />
+                </div>
 
-              <!-- EV Mode Info Card -->
-              <v-col v-if="mode === 'EV'" cols="12" md="6">
-                <UsageSettingsCard v-model:kwhUsage="kwhUsage" :batteryCapacity="batteryCapacity" :kmRange="kmRange" />
-              </v-col>
-            </v-row>
+                <!-- EV Mode Info Card -->
+                <div v-if="mode === 'EV'" class="w-full">
+                  <UsageSettingsCard 
+                    v-model:kwhUsage="kwhUsage" 
+                    :batteryCapacity="batteryCapacity" 
+                    :kmRange="kmRange" 
+                  />
+                </div>
+              </div>
 
-            <!-- Calculate Button -->
-            <!-- <CalculateButton :mode="mode" @calculate="handleCalculate" /> -->
+              <!-- Reset Button -->
+              <div class="text-center mb-6 sm:mb-8">
+                <v-btn 
+                  variant="outlined" 
+                  color="grey-darken-1" 
+                  @click="handleReset"
+                  class="px-6 py-2 rounded-xl"
+                  size="large"
+                >
+                  <v-icon start>mdi-refresh</v-icon>
+                  Reset to Defaults
+                </v-btn>
+              </div>
 
-            <!-- Reset Button -->
-            <div class="text-center mb-4 px-8 py-2">
-              <v-btn variant="outlined" color="grey" @click="handleReset">
-                <v-icon start>mdi-refresh</v-icon>
-                Reset to Defaults
-              </v-btn>
-            </div>
-
-            <!-- Results -->
-            <ResultsCard :mode="mode" :isChargingCheaper="isChargingCheaper" :chargingCost="chargingCost"
-              :petrolCost="petrolCost" :kmRange="kmRange" />
-          </v-card-text>
-        </v-card>
+              <!-- Results -->
+              <ResultsCard 
+                :mode="mode" 
+                :isChargingCheaper="isChargingCheaper" 
+                :chargingCost="chargingCost"
+                :petrolCost="petrolCost" 
+                :kmRange="kmRange" 
+              />
+            </v-card-text>
+          </v-card>
+        </div>
       </v-container>
     </v-main>
   </v-app>
 </template>
+
+<style scoped>
+.main-background {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #eff6ff 0%, #ffffff 50%, #f0fdf4 100%);
+  background-attachment: fixed;
+}
+
+/* Ensure the gradient text works */
+.bg-gradient-to-r {
+  background: linear-gradient(to right, #2563eb, #16a34a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+</style>

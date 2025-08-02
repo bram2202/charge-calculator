@@ -1,35 +1,104 @@
 <template>
-    <div class="mt-8">
-        <v-card :color="mode === 'Hybrid' ? (isChargingCheaper ? 'success' : 'warning') : 'info'" variant="tonal"
-            class="text-center">
-            <v-card-text>
-                <v-icon
-                    :icon="mode === 'EV' ? 'mdi-lightning-bolt' : (isChargingCheaper ? 'mdi-battery-charging' : 'mdi-gas-station')"
-                    size="48" class="mb-4" />
-                <h2 class="text-2xl font-bold mb-2">Result</h2>
-                <h3 class="mb-2">{{ recommendationText }}</h3>
-                <p class="">{{ recommendationComparisonText }}</p>
+  <div class="w-full">
+    <v-card 
+      :color="mode === 'Hybrid' ? (isChargingCheaper ? 'success' : 'warning') : 'info'" 
+      variant="tonal"
+      class="text-center rounded-xl shadow-lg"
+    >
+      <v-card-text class="p-4 sm:p-6 lg:p-8">
+        <div class="flex flex-col items-center">
+          <v-icon
+            :icon="mode === 'EV' ? 'mdi-lightning-bolt' : (isChargingCheaper ? 'mdi-battery-charging' : 'mdi-gas-station')"
+            size="48" 
+            class="mb-4 sm:mb-6" 
+          />
+          <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 sm:mb-4">
+            {{ mode === 'EV' ? 'Charging Cost' : 'Cost Comparison' }}
+          </h2>
+          <h3 class="text-base sm:text-lg lg:text-xl mb-2 sm:mb-3 px-2">
+            {{ recommendationText }}
+          </h3>
+          <p class="text-sm sm:text-base text-opacity-80 px-2">
+            {{ recommendationComparisonText }}
+          </p>
 
-                <div v-if="mode === 'Hybrid'" class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <v-card variant="outlined">
-                        <v-card-text class="text-center">
-                            <v-icon icon="mdi-battery-charging" size="32" color="blue" class="mb-2" />
-                            <div class="text-lg font-semibold">Charging</div>
-                            <div class="text-xl text-blue-600">€{{ chargingCost.toFixed(2) }}</div>
-                        </v-card-text>
-                    </v-card>
+          <div v-if="mode === 'Hybrid'" class="mt-6 sm:mt-8 w-full max-w-2xl">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <v-card 
+                variant="outlined" 
+                class="rounded-xl shadow-sm hover:shadow-md transition-all duration-200 bg-white/80 backdrop-blur-sm"
+              >
+                <v-card-text class="text-center p-4 sm:p-6">
+                  <v-icon icon="mdi-battery-charging" size="32" color="blue" class="mb-3" />
+                  <div class="text-base sm:text-lg font-semibold text-gray-700 mb-2">
+                    Electric Charging
+                  </div>
+                  <div class="text-xl sm:text-2xl font-bold text-blue-600">
+                    €{{ chargingCost.toFixed(2) }}
+                  </div>
+                  <div class="text-xs sm:text-sm text-gray-500 mt-1">
+                    per full charge
+                  </div>
+                </v-card-text>
+              </v-card>
 
-                    <v-card variant="outlined">
-                        <v-card-text class="text-center">
-                            <v-icon icon="mdi-gas-station" size="32" color="orange" class="mb-2" />
-                            <div class="text-lg font-semibold">Petrol</div>
-                            <div class="text-xl text-orange-600">€{{ petrolCost.toFixed(2) }}</div>
-                        </v-card-text>
-                    </v-card>
+              <v-card 
+                variant="outlined" 
+                class="rounded-xl shadow-sm hover:shadow-md transition-all duration-200 bg-white/80 backdrop-blur-sm"
+              >
+                <v-card-text class="text-center p-4 sm:p-6">
+                  <v-icon icon="mdi-gas-station" size="32" color="orange" class="mb-3" />
+                  <div class="text-base sm:text-lg font-semibold text-gray-700 mb-2">
+                    Petrol Equivalent
+                  </div>
+                  <div class="text-xl sm:text-2xl font-bold text-orange-600">
+                    €{{ petrolCost.toFixed(2) }}
+                  </div>
+                  <div class="text-xs sm:text-sm text-gray-500 mt-1">
+                    same distance
+                  </div>
+                </v-card-text>
+              </v-card>
+            </div>
+            
+            <!-- Savings indicator for mobile -->
+            <div v-if="mode === 'Hybrid'" class="mt-4 sm:mt-6">
+              <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium"
+                   :class="isChargingCheaper ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'">
+                <v-icon 
+                  :icon="isChargingCheaper ? 'mdi-trending-down' : 'mdi-trending-up'" 
+                  size="16" 
+                />
+                {{ isChargingCheaper ? 'Charging saves' : 'Petrol saves' }} 
+                €{{ Math.abs(chargingCost - petrolCost).toFixed(2) }}
+              </div>
+            </div>
+          </div>
+
+          <!-- EV Mode additional info -->
+          <div v-if="mode === 'EV'" class="mt-6 sm:mt-8 w-full max-w-md">
+            <v-card 
+              variant="outlined" 
+              class="rounded-xl shadow-sm bg-white/80 backdrop-blur-sm"
+            >
+              <v-card-text class="text-center p-4 sm:p-6">
+                <v-icon icon="mdi-map-marker-distance" size="32" color="purple" class="mb-3" />
+                <div class="text-base sm:text-lg font-semibold text-gray-700 mb-2">
+                  Estimated Range
                 </div>
-            </v-card-text>
-        </v-card>
-    </div>
+                <div class="text-xl sm:text-2xl font-bold text-purple-600">
+                  {{ kmRange.toFixed(0) }} km
+                </div>
+                <div class="text-xs sm:text-sm text-gray-500 mt-1">
+                  per full charge
+                </div>
+              </v-card-text>
+            </v-card>
+          </div>
+        </div>
+      </v-card-text>
+    </v-card>
+  </div>
 </template>
 
 <script setup>

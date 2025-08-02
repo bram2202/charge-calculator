@@ -2,82 +2,195 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import mobile utilities */
+@import './assets/mobile-utilities.css';
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
   font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
+  color-scheme: light;
+  color: #1f2937;
+  background-color: #ffffff;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-.card {
-  padding: 2em;
+  background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 50%, #f0fdf4 100%);
 }
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  width: 100%;
+  min-height: 100vh;
 }
 
-@media (prefers-color-scheme: light) {
+/* Improve touch targets for mobile */
+@media (max-width: 768px) {
+  .v-btn {
+    min-height: 48px !important;
+  }
+  
+  .v-chip {
+    min-height: 48px !important;
+  }
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Smooth transitions */
+* {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Focus styles for accessibility */
+.v-btn:focus-visible,
+.v-text-field:focus-within,
+.v-chip:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Custom animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Responsive text sizes */
+@media (max-width: 640px) {
+  h1 {
+    font-size: 1.875rem !important;
+    line-height: 2.25rem !important;
+  }
+  
+  h2 {
+    font-size: 1.5rem !important;
+    line-height: 2rem !important;
+  }
+  
+  h3 {
+    font-size: 1.25rem !important;
+    line-height: 1.75rem !important;
+  }
+}
+
+/* Improve card shadows */
+.v-card {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+}
+
+.v-card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Improve form field spacing on mobile */
+@media (max-width: 640px) {
+  .v-text-field {
+    margin-bottom: 0.5rem;
+  }
+  
+  .v-radio-group {
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Orientation-specific styles */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  /* Landscape mobile - reduce vertical spacing */
+  .v-card-text {
+    padding: 1rem !important;
+  }
+  
+  h1 {
+    font-size: 1.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .space-y-4 > * + *,
+  .space-y-5 > * + * {
+    margin-top: 0.75rem !important;
+  }
+}
+
+@media screen and (orientation: portrait) and (max-width: 480px) {
+  /* Portrait mobile - optimize for single-handed use */
+  .v-container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  .v-card {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Tablet-specific optimizations */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .grid-cols-1.lg\\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+/* Large screen optimizations */
+@media screen and (min-width: 1200px) {
+  .max-w-6xl {
+    max-width: 1200px;
+  }
+  
+  .v-card-text {
+    padding: 2.5rem !important;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .v-icon {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Dark mode support (future enhancement) */
+@media (prefers-color-scheme: dark) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+    --surface-color: #1f2937;
+    --text-color: #f9fafb;
   }
 }
