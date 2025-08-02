@@ -26,7 +26,10 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
               <v-card 
                 variant="outlined" 
-                class="rounded-xl shadow-sm hover:shadow-md transition-all duration-200 bg-white/80 backdrop-blur-sm"
+                :class="[
+                  'rounded-xl shadow-sm hover:shadow-md transition-all duration-200 backdrop-blur-sm mb-2',
+                  !isChargingCheaper ? 'border-red-300 bg-red-100/70' : 'border-gray-200 bg-white/80'
+                ]"
               >
                 <v-card-text class="text-center p-4 sm:p-6">
                   <v-icon icon="mdi-battery-charging" size="32" color="blue" class="mb-3" />
@@ -44,7 +47,10 @@
 
               <v-card 
                 variant="outlined" 
-                class="rounded-xl shadow-sm hover:shadow-md transition-all duration-200 bg-white/80 backdrop-blur-sm"
+                :class="[
+                  'rounded-xl shadow-sm hover:shadow-md transition-all duration-200 backdrop-blur-sm',
+                  isChargingCheaper ? 'border-red-300 bg-red-100/70' : 'border-gray-200 bg-white/80'
+                ]"
               >
                 <v-card-text class="text-center p-4 sm:p-6">
                   <v-icon icon="mdi-gas-station" size="32" color="orange" class="mb-3" />
@@ -60,19 +66,7 @@
                 </v-card-text>
               </v-card>
             </div>
-            
-            <!-- Savings indicator for mobile -->
-            <div v-if="mode === 'Hybrid'" class="mt-4 sm:mt-6">
-              <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium"
-                   :class="isChargingCheaper ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'">
-                <v-icon 
-                  :icon="isChargingCheaper ? 'mdi-trending-down' : 'mdi-trending-up'" 
-                  size="16" 
-                />
-                {{ isChargingCheaper ? 'Charging saves' : 'Petrol saves' }} 
-                €{{ Math.abs(chargingCost - petrolCost).toFixed(2) }}
-              </div>
-            </div>
+        
           </div>
 
           <!-- EV Mode additional info -->
@@ -152,3 +146,22 @@ const recommendationComparisonText = computed(() => {
     }
 })
 </script>
+
+<style scoped>
+.border-red-300 {
+  border-color: #fca5a5 !important;
+  border-width: 2px !important;
+}
+
+.bg-red-100\/70 {
+  background-color: rgba(254, 226, 226, 0.8) !important;
+}
+
+.border-gray-200 {
+  border-color: #e5e7eb !important;
+}
+
+.bg-white\/80 {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+}
+</style>

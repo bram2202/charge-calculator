@@ -9,7 +9,7 @@
     <v-card-text class="p-4 sm:p-6 space-y-4 sm:space-y-5">
       <v-text-field
         :model-value="petrolPrice"
-        @update:model-value="$emit('update:petrolPrice', $event)"
+        @update:model-value="$emit('update:petrolPrice', parseFloat($event) || 0)"
         label="Petrol Price"
         prefix="€"
         suffix="per liter"
@@ -23,7 +23,7 @@
       
       <v-text-field
         :model-value="petrolUsage"
-        @update:model-value="$emit('update:petrolUsage', $event)"
+        @update:model-value="$emit('update:petrolUsage', parseFloat($event) || 0)"
         label="Petrol Usage"
         suffix="km/l"
         type="number"
@@ -36,7 +36,7 @@
 
       <v-text-field
         :model-value="kwhUsage"
-        @update:model-value="$emit('update:kwhUsage', $event)"
+        @update:model-value="$emit('update:kwhUsage', parseFloat($event) || 0)"
         label="Electric Usage"
         suffix="kWh/km"
         type="number"

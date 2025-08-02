@@ -9,7 +9,7 @@
     <v-card-text class="p-4 sm:p-6 space-y-4 sm:space-y-5">
       <v-text-field
         :model-value="kwhUsage"
-        @update:model-value="$emit('update:kwhUsage', $event)"
+        @update:model-value="$emit('update:kwhUsage', parseFloat($event) || 0)"
         label="Electric Usage"
         suffix="kWh/km"
         type="number"

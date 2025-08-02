@@ -9,7 +9,7 @@
     <v-card-text class="p-4 sm:p-6 space-y-4 sm:space-y-5">
       <v-text-field
         :model-value="batteryCapacity"
-        @update:model-value="$emit('update:batteryCapacity', $event)"
+        @update:model-value="$emit('update:batteryCapacity', parseFloat($event) || 0)"
         label="Battery Capacity"
         suffix="kWh"
         type="number"
@@ -22,7 +22,7 @@
       
       <v-text-field
         :model-value="pricePerKWh"
-        @update:model-value="$emit('update:pricePerKWh', $event)"
+        @update:model-value="$emit('update:pricePerKWh', parseFloat($event) || 0)"
         label="Price per kWh"
         prefix="€"
         type="number"
@@ -61,7 +61,7 @@
         <v-text-field
           v-if="feeType === 'fixed'"
           :model-value="startingFee"
-          @update:model-value="$emit('update:startingFee', $event)"
+          @update:model-value="$emit('update:startingFee', parseFloat($event) || 0)"
           label="Starting Fee"
           prefix="€"
           type="number"
@@ -75,7 +75,7 @@
         <v-text-field
           v-if="feeType === 'percentage'"
           :model-value="transactionFeePercent"
-          @update:model-value="$emit('update:transactionFeePercent', $event)"
+          @update:model-value="$emit('update:transactionFeePercent', parseFloat($event) || 0)"
           label="Transaction Fee"
           suffix="%"
           type="number"
