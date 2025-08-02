@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Type 2 Mennekes Header Icon - Clean -->
+  
+  <!-- Main connector body -->
+  <circle cx="16" cy="16" r="14" fill="currentColor"/>
+  
+  <!-- Inner ring -->
+  <circle cx="16" cy="16" r="11" fill="white"/>
+  <circle cx="16" cy="16" r="9.5" fill="currentColor"/>
+  
+  <!-- Simplified Mennekes pin layout -->
+  <!-- Top 3 power pins -->
+  <circle cx="16" cy="10" r="1.3" fill="white"/>
+  <circle cx="11.5" cy="12.5" r="1.3" fill="white"/>
+  <circle cx="20.5" cy="12.5" r="1.3" fill="white"/>
+  
+  <!-- Side neutral/earth pins -->
+  <circle cx="11" cy="17" r="1.3" fill="white"/>
+  <circle cx="21" cy="17" r="1.3" fill="white"/>
+  
+  <!-- Bottom control pins (smaller) -->
+  <circle cx="14" cy="21" r="0.9" fill="white"/>
+  <circle cx="18" cy="21" r="0.9" fill="white"/>
+</svg>
