@@ -1,17 +1,12 @@
 <template>
   <div class="w-full">
-    <v-card 
-      :color="mode === 'Hybrid' ? (isChargingCheaper ? 'success' : 'warning') : 'info'" 
-      variant="tonal"
-      class="text-center rounded-xl shadow-lg"
-    >
+    <v-card :color="mode === 'Hybrid' ? (isChargingCheaper ? 'success' : 'warning') : 'info'" variant="tonal"
+      class="text-center rounded-xl shadow-lg">
       <v-card-text class="p-4 sm:p-6 lg:p-8">
         <div class="flex flex-col items-center">
           <v-icon
             :icon="mode === 'EV' ? 'mdi-lightning-bolt' : (isChargingCheaper ? 'mdi-battery-charging' : 'mdi-gas-station')"
-            size="48" 
-            class="mb-4 sm:mb-6" 
-          />
+            size="48" class="mb-4 sm:mb-6" />
           <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 sm:mb-4">
             {{ mode === 'EV' ? 'Charging Cost' : 'Cost Comparison' }}
           </h2>
@@ -24,13 +19,8 @@
 
           <div v-if="mode === 'Hybrid'" class="mt-6 sm:mt-8 w-full max-w-2xl">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-              <v-card 
-                variant="outlined" 
-                :class="[
-                  'rounded-xl shadow-sm hover:shadow-md transition-all duration-200 backdrop-blur-sm mb-2',
-                  !isChargingCheaper ? 'border-red-300 bg-red-100/70' : 'border-gray-200 bg-white/80'
-                ]"
-              >
+              <v-card variant="outlined"
+                class="rounded-xl shadow-sm hover:shadow-md transition-all duration-200 backdrop-blur-sm mb-2 border-gray-200 bg-white/80">
                 <v-card-text class="text-center p-4 sm:p-6">
                   <v-icon icon="mdi-battery-charging" size="32" color="blue" class="mb-3" />
                   <div class="text-base sm:text-lg font-semibold text-gray-700 mb-2">
@@ -45,13 +35,8 @@
                 </v-card-text>
               </v-card>
 
-              <v-card 
-                variant="outlined" 
-                :class="[
-                  'rounded-xl shadow-sm hover:shadow-md transition-all duration-200 backdrop-blur-sm',
-                  isChargingCheaper ? 'border-red-300 bg-red-100/70' : 'border-gray-200 bg-white/80'
-                ]"
-              >
+              <v-card variant="outlined"
+                class="rounded-xl shadow-sm hover:shadow-md transition-all duration-200 backdrop-blur-sm border-gray-200 bg-white/80">
                 <v-card-text class="text-center p-4 sm:p-6">
                   <v-icon icon="mdi-gas-station" size="32" color="orange" class="mb-3" />
                   <div class="text-base sm:text-lg font-semibold text-gray-700 mb-2">
@@ -66,15 +51,12 @@
                 </v-card-text>
               </v-card>
             </div>
-        
+
           </div>
 
           <!-- EV Mode additional info -->
           <div v-if="mode === 'EV'" class="mt-6 sm:mt-8 w-full max-w-md">
-            <v-card 
-              variant="outlined" 
-              class="rounded-xl shadow-sm bg-white/80 backdrop-blur-sm"
-            >
+            <v-card variant="outlined" class="rounded-xl shadow-sm bg-white/80 backdrop-blur-sm">
               <v-card-text class="text-center p-4 sm:p-6">
                 <v-icon icon="mdi-map-marker-distance" size="32" color="purple" class="mb-3" />
                 <div class="text-base sm:text-lg font-semibold text-gray-700 mb-2">
@@ -99,51 +81,51 @@
 import { computed } from 'vue'
 
 const props = defineProps({
-    mode: {
-        type: String,
-        required: true
-    },
-    isChargingCheaper: {
-        type: Boolean,
-        required: true
-    },
-    chargingCost: {
-        type: Number,
-        required: true
-    },
-    petrolCost: {
-        type: Number,
-        required: true
-    },
-    kmRange: {
-        type: Number,
-        required: true
-    }
+  mode: {
+    type: String,
+    required: true
+  },
+  isChargingCheaper: {
+    type: Boolean,
+    required: true
+  },
+  chargingCost: {
+    type: Number,
+    required: true
+  },
+  petrolCost: {
+    type: Number,
+    required: true
+  },
+  kmRange: {
+    type: Number,
+    required: true
+  }
 })
 
 // Generate recommendation text based on mode
 const recommendationText = computed(() => {
-    if (props.mode === 'EV') {
-        return `Total charging cost: €${props.chargingCost.toFixed(2)} for ${props.kmRange.toFixed(0)} km range`
+  if (props.mode === 'EV') {
+    return `Total charging cost: €${props.chargingCost.toFixed(2)} for ${props.kmRange.toFixed(0)} km range`
+  } else {
+    const savings = Math.abs(props.chargingCost - props.petrolCost)
+    if (props.isChargingCheaper) {
+      return `Charging is cheaper! Save €${savings.toFixed(2)}`
     } else {
-        const savings = Math.abs(props.chargingCost - props.petrolCost)
-        if (props.isChargingCheaper) {
-            return `Charging is cheaper! Save €${savings.toFixed(2)}`
-        } else {
-            return `Petrol is cheaper! Save €${savings.toFixed(2)}`
-        }
+      return `Petrol is cheaper! Save €${savings.toFixed(2)}`
     }
+  }
 })
 
 const recommendationComparisonText = computed(() => {
-    if (props.mode === 'Hybrid') {
-        const savings = Math.abs(props.chargingCost - props.petrolCost)
-        if (props.isChargingCheaper) {
-            return `(Charging: €${props.chargingCost.toFixed(2)} vs Petrol: €${props.petrolCost.toFixed(2)})`
-        } else {
-            return `(Petrol: €${props.petrolCost.toFixed(2)} vs Charging: €${props.chargingCost.toFixed(2)})`
-        }
+  if (props.mode === 'Hybrid') {
+    const savings = Math.abs(props.chargingCost - props.petrolCost)
+    if (props.isChargingCheaper) {
+      return `(Charging: €${props.chargingCost.toFixed(2)} vs Petrol: €${props.petrolCost.toFixed(2)})`
+    } else {
+      return `(Petrol: €${props.petrolCost.toFixed(2)} vs Charging: €${props.chargingCost.toFixed(2)})`
     }
+  }
 })
 </script>
 
