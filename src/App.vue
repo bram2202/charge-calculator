@@ -71,7 +71,8 @@ const handleReset = () => {
           <div class="text-center mb-6 sm:mb-8">
             <div class="inline-flex items-center justify-center gap-2 sm:gap-3 mb-4">
               <v-icon icon="mdi-ev-station" size="32" class="text-blue-600 sm:text-4xl" />
-              <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+              <h1
+                class="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
                 EV Charge Calculator
               </h1>
             </div>
@@ -91,59 +92,54 @@ const handleReset = () => {
               <!-- Input Cards Grid -->
               <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
                 <!-- Basic EV Inputs -->
-                <div class="w-full mb-8" >
-                  <ChargingDetailsCard 
-                    v-model:batteryCapacity="batteryCapacity" 
-                    v-model:pricePerKWh="pricePerKWh"
-                    v-model:feeType="feeType" 
-                    v-model:startingFee="startingFee"
-                    v-model:transactionFeePercent="transactionFeePercent" 
-                  />
+                <div class="w-full mb-8">
+                  <ChargingDetailsCard v-model:batteryCapacity="batteryCapacity" v-model:pricePerKWh="pricePerKWh"
+                    v-model:feeType="feeType" v-model:startingFee="startingFee"
+                    v-model:transactionFeePercent="transactionFeePercent" />
                 </div>
 
                 <!-- Hybrid Mode Inputs -->
                 <div v-if="mode === 'Hybrid'" class="w-full">
-                  <PetrolComparisonCard 
-                    v-model:petrolPrice="petrolPrice" 
-                    v-model:petrolUsage="petrolUsage"
-                    v-model:kwhUsage="kwhUsage" 
-                  />
+                  <PetrolComparisonCard v-model:petrolPrice="petrolPrice" v-model:petrolUsage="petrolUsage"
+                    v-model:kwhUsage="kwhUsage" />
                 </div>
 
                 <!-- EV Mode Info Card -->
                 <div v-if="mode === 'EV'" class="w-full">
-                  <UsageSettingsCard 
-                    v-model:kwhUsage="kwhUsage" 
-                    :batteryCapacity="batteryCapacity" 
-                    :kmRange="kmRange" 
-                  />
+                  <UsageSettingsCard v-model:kwhUsage="kwhUsage" :batteryCapacity="batteryCapacity"
+                    :kmRange="kmRange" />
                 </div>
               </div>
 
               <!-- Reset Button -->
               <div class="text-center mb-6 sm:mb-8">
-                <v-btn 
-                  variant="outlined" 
-                  color="grey-darken-1" 
-                  @click="handleReset"
-                  class="px-6 py-2 rounded-xl"
-                  size="large"
-                >
+                <v-btn variant="outlined" color="grey-darken-1" @click="handleReset" class="px-6 py-2 rounded-xl"
+                  size="large">
                   <v-icon start>mdi-refresh</v-icon>
                   Reset to Defaults
                 </v-btn>
               </div>
 
               <!-- Results -->
-              <ResultsCard 
-                :mode="mode" 
-                :isChargingCheaper="isChargingCheaper" 
-                :chargingCost="chargingCost"
-                :petrolCost="petrolCost" 
-                :kmRange="kmRange" 
-              />
+              <ResultsCard :mode="mode" :isChargingCheaper="isChargingCheaper" :chargingCost="chargingCost"
+                :petrolCost="petrolCost" :kmRange="kmRange" />
             </v-card-text>
           </v-card>
+
+          <!-- Footer -->
+          <div class="text-center mt-8 mb-4">
+            <div class="text-gray-500 text-sm">
+              <p class="mb-2">
+                Made by
+                <a href="https://bram-dev.nl" target="_blank" rel="noopener noreferrer" class="text-blue-600">
+                  Bram van Deventer
+                </a>
+              </p>
+              <p class="text-xs text-gray-400">
+                © {{ new Date().getFullYear() }} - EV Charge Calculator
+              </p>
+            </div>
+          </div>
         </div>
       </v-container>
     </v-main>

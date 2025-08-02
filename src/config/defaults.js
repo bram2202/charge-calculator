@@ -7,7 +7,7 @@ export const defaultConfig = {
   batteryCapacity: 50, // kWh
   pricePerKWh: 0.25, // €/kWh
   feeType: 'fixed', // 'fixed' or 'percentage'
-  startingFee: 2.5, // € (when feeType is 'fixed')
+  startingFee: 0.5, // € (when feeType is 'fixed')
   transactionFeePercent: 5, // % (when feeType is 'percentage')
   
   // Electric usage

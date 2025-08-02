@@ -35,12 +35,12 @@
       />
 
       <v-text-field
-        :model-value="kwhUsage"
+        :model-value="kwhUsage.toFixed(3)"
         @update:model-value="$emit('update:kwhUsage', parseFloat($event) || 0)"
         label="Electric Usage"
         suffix="kWh/km"
         type="number"
-        step="0.01"
+        step="0.001"
         variant="outlined"
         color="green"
         class="text-field-mobile"
