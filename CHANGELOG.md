@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2025-08-03
+
+### 🚜 Refactor
+
+- Convert to typescript
+
+### 🧪 Testing
+
+- :white_check_mark: Add testing of calculations
+- :white_check_mark: Create seperate test workflow for all pushes
+
+### ⚙️ Miscellaneous Tasks
+
+- :white_check_mark: Add testing to pipeline
+- :construction_worker: Remove test workflow
+- :construction_worker: Allow security job to fail
+- 👷 Allow security job to fail (2)
+
 ## [1.0.0] - 2025-08-02
 
 ### 🚀 Features
