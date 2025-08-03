@@ -9,7 +9,6 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest",
-    "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "changelog": "git-cliff",
     "release": "git-cliff --bump --tag"
