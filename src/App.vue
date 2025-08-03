@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
-import { useChargeCalculatorConfig } from './composables/useChargeCalculatorConfig.js'
-import { ChargeCalculationService } from './services/ChargeCalculationService.js'
+import { useChargeCalculatorConfig } from '@/composables/useChargeCalculatorConfig'
+import { ChargeCalculationService } from '@/services/ChargeCalculationService'
 import ModeSelector from './components/ModeSelector.vue'
 import ChargingDetailsCard from './components/ChargingDetailsCard.vue'
 import PetrolComparisonCard from './components/PetrolComparisonCard.vue'

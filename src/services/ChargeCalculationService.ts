@@ -1,16 +1,76 @@
 /**
  * Service class for handling all charging and cost calculations
  */
+
+export type FeeType = 'fixed' | 'percentage' | 'none';
+
+export interface ChargingCostParams {
+  batteryCapacity: number;
+  pricePerKWh: number;
+  feeType: FeeType;
+  startingFee: number;
+  transactionFeePercent: number;
+}
+
+export interface RangeParams {
+  batteryCapacity: number;
+  kwhUsage: number;
+}
+
+export interface PetrolCostParams {
+  kmRange: number;
+  petrolUsage: number;
+  petrolPrice: number;
+}
+
+export interface ComparisonParams {
+  chargingCost: number;
+  petrolCost: number;
+}
+
+export interface ComparisonResult {
+  isChargingCheaper: boolean;
+  savings: number;
+  cheaperOption: 'charging' | 'petrol';
+  costDifference: number;
+}
+
+export interface HybridComparisonParams {
+  batteryCapacity: number;
+  pricePerKWh: number;
+  feeType: FeeType;
+  startingFee: number;
+  transactionFeePercent: number;
+  kwhUsage: number;
+  petrolUsage: number;
+  petrolPrice: number;
+}
+
+export interface HybridComparisonResult extends ComparisonResult {
+  chargingCost: number;
+  petrolCost: number;
+  kmRange: number;
+}
+
+export interface EVCostsParams {
+  batteryCapacity: number;
+  pricePerKWh: number;
+  feeType: FeeType;
+  startingFee: number;
+  transactionFeePercent: number;
+  kwhUsage: number;
+}
+
+export interface EVCostsResult {
+  chargingCost: number;
+  kmRange: number;
+  isChargingCheaper: boolean;
+  petrolCost: number;
+}
+
 export class ChargeCalculationService {
   /**
    * Calculate the total charging cost
-   * @param {Object} params - Calculation parameters
-   * @param {number} params.batteryCapacity - Battery capacity in kWh
-   * @param {number} params.pricePerKWh - Price per kWh in euros
-   * @param {string} params.feeType - Fee type ('fixed' or 'percentage')
-   * @param {number} params.startingFee - Starting fee in euros (when feeType is 'fixed')
-   * @param {number} params.transactionFeePercent - Transaction fee percentage (when feeType is 'percentage')
-   * @returns {number} Total charging cost in euros
    */
   static calculateChargingCost({
     batteryCapacity,
@@ -18,7 +78,7 @@ export class ChargeCalculationService {
     feeType,
     startingFee,
     transactionFeePercent
-  }) {
+  }: ChargingCostParams): number {
     if (isNaN(batteryCapacity) || isNaN(pricePerKWh) || batteryCapacity < 0 || pricePerKWh < 0) {
       throw new Error('Battery capacity and price per kWh must be valid non-negative numbers')
     }
@@ -45,12 +105,8 @@ export class ChargeCalculationService {
 
   /**
    * Calculate the estimated range in kilometers
-   * @param {Object} params - Calculation parameters
-   * @param {number} params.batteryCapacity - Battery capacity in kWh
-   * @param {number} params.kwhUsage - Energy usage in kWh per km
-   * @returns {number} Estimated range in kilometers
    */
-  static calculateKmRange({ batteryCapacity, kwhUsage }) {
+  static calculateKmRange({ batteryCapacity, kwhUsage }: RangeParams): number {
     if (isNaN(batteryCapacity) || batteryCapacity < 0) {
       throw new Error('Battery capacity must be a non-negative number')
     }
@@ -64,13 +120,8 @@ export class ChargeCalculationService {
 
   /**
    * Calculate the equivalent petrol cost for the same range
-   * @param {Object} params - Calculation parameters
-   * @param {number} params.kmRange - Range in kilometers
-   * @param {number} params.petrolUsage - Petrol usage in km per liter
-   * @param {number} params.petrolPrice - Petrol price in euros per liter
-   * @returns {number} Petrol cost in euros
    */
-  static calculatePetrolCost({ kmRange, petrolUsage, petrolPrice }) {
+  static calculatePetrolCost({ kmRange, petrolUsage, petrolPrice }: PetrolCostParams): number {
     if (isNaN(kmRange) || kmRange < 0) {
       throw new Error('Range must be a non-negative number')
     }
@@ -88,12 +139,8 @@ export class ChargeCalculationService {
 
   /**
    * Compare charging cost with petrol cost
-   * @param {Object} params - Calculation parameters
-   * @param {number} params.chargingCost - Charging cost in euros
-   * @param {number} params.petrolCost - Petrol cost in euros
-   * @returns {Object} Comparison result with isChargingCheaper and savings
    */
-  static compareChargingWithPetrolCost({ chargingCost, petrolCost }) {
+  static compareChargingWithPetrolCost({ chargingCost, petrolCost }: ComparisonParams): ComparisonResult {
     if (isNaN(chargingCost) || isNaN(petrolCost) || chargingCost < 0 || petrolCost < 0) {
       throw new Error('Charging cost and petrol cost must be non-negative numbers')
     }
@@ -111,8 +158,6 @@ export class ChargeCalculationService {
 
   /**
    * Calculate all costs for hybrid mode
-   * @param {Object} params - All calculation parameters
-   * @returns {Object} Complete calculation results
    */
   static calculateHybridComparison({
     batteryCapacity,
@@ -123,7 +168,7 @@ export class ChargeCalculationService {
     kwhUsage,
     petrolUsage,
     petrolPrice
-  }) {
+  }: HybridComparisonParams): HybridComparisonResult {
     const chargingCost = this.calculateChargingCost({
       batteryCapacity,
       pricePerKWh,
@@ -155,8 +200,6 @@ export class ChargeCalculationService {
 
   /**
    * Calculate all costs for EV mode
-   * @param {Object} params - All calculation parameters
-   * @returns {Object} Complete calculation results
    */
   static calculateEVCosts({
     batteryCapacity,
@@ -165,7 +208,7 @@ export class ChargeCalculationService {
     startingFee,
     transactionFeePercent,
     kwhUsage
-  }) {
+  }: EVCostsParams): EVCostsResult {
     const chargingCost = this.calculateChargingCost({
       batteryCapacity,
       pricePerKWh,
