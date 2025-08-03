@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useChargeCalculatorConfig } from './composables/useChargeCalculatorConfig.js'
+import { ChargeCalculationService } from './services/ChargeCalculationService.js'
 import ModeSelector from './components/ModeSelector.vue'
 import ChargingDetailsCard from './components/ChargingDetailsCard.vue'
 import PetrolComparisonCard from './components/PetrolComparisonCard.vue'
@@ -23,38 +24,65 @@ const {
   getCurrentConfig
 } = useChargeCalculatorConfig()
 
-// Computed properties
+// Computed properties using the calculation service
 const chargingCost = computed(() => {
-  const energyCost = batteryCapacity.value * pricePerKWh.value
-  const fee = feeType.value === 'fixed'
-    ? startingFee.value
-    : (energyCost * transactionFeePercent.value / 100)
-  return energyCost + fee
+  try {
+    return ChargeCalculationService.calculateChargingCost({
+      batteryCapacity: batteryCapacity.value,
+      pricePerKWh: pricePerKWh.value,
+      feeType: feeType.value,
+      startingFee: startingFee.value,
+      transactionFeePercent: transactionFeePercent.value
+    })
+  } catch (error) {
+    console.warn('Error calculating charging cost:', error.message)
+    return 0
+  }
 })
 
 const kmRange = computed(() => {
-  return batteryCapacity.value / kwhUsage.value
+  try {
+    return ChargeCalculationService.calculateKmRange({
+      batteryCapacity: batteryCapacity.value,
+      kwhUsage: kwhUsage.value
+    })
+  } catch (error) {
+    console.warn('Error calculating km range:', error.message)
+    return 0
+  }
 })
 
 const petrolCost = computed(() => {
   if (mode.value === 'Hybrid') {
-    return (kmRange.value / petrolUsage.value) * petrolPrice.value
+    try {
+      return ChargeCalculationService.calculatePetrolCost({
+        kmRange: kmRange.value,
+        petrolUsage: petrolUsage.value,
+        petrolPrice: petrolPrice.value
+      })
+    } catch (error) {
+      console.warn('Error calculating petrol cost:', error.message)
+      return 0
+    }
   }
   return 0
 })
 
 const isChargingCheaper = computed(() => {
   if (mode.value === 'Hybrid') {
-    return chargingCost.value < petrolCost.value
+    try {
+      const comparison = ChargeCalculationService.compareChargingWithPetrolCost({
+        chargingCost: chargingCost.value,
+        petrolCost: petrolCost.value
+      })
+      return comparison.isChargingCheaper
+    } catch (error) {
+      console.warn('Error comparing costs:', error.message)
+      return true
+    }
   }
   return true
 })
-
-// // Event handlers
-// const handleCalculate = () => {
-//   console.log('Calculate button clicked')
-//   console.log('Current config:', getCurrentConfig())
-// }
 
 const handleReset = () => {
   resetToDefaults()
