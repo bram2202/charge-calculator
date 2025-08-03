@@ -1,5 +1,44 @@
+import type { FeeType } from '@/services/ChargeCalculationService'
+
+// Configuration interfaces
+export interface AppConfig {
+  mode: 'EV' | 'Hybrid'
+  batteryCapacity: number
+  pricePerKWh: number
+  feeType: FeeType
+  startingFee: number
+  transactionFeePercent: number
+  kwhUsage: number
+  petrolPrice: number
+  petrolUsage: number
+}
+
+export interface EnvConfigOverrides {
+  development?: Partial<AppConfig>
+  production?: Partial<AppConfig>
+  test?: Partial<AppConfig>
+}
+
+export interface ChargingDefaults {
+  batteryCapacity: number
+  pricePerKWh: number
+  feeType: FeeType
+  startingFee: number
+  transactionFeePercent: number
+}
+
+export interface HybridDefaults {
+  petrolPrice: number
+  petrolUsage: number
+  kwhUsage: number
+}
+
+export interface AppDefaults {
+  mode: 'EV' | 'Hybrid'
+}
+
 // Default configuration values for the Charge Calculator
-export const defaultConfig = {
+export const defaultConfig: AppConfig = {
   // Mode settings
   mode: 'EV', // 'EV' or 'Hybrid'
   
@@ -19,7 +58,7 @@ export const defaultConfig = {
 }
 
 // Environment-specific settings (can be overridden)
-export const envConfig = {
+export const envConfig: EnvConfigOverrides = {
   // Development settings
   development: {
     // Override any defaults for development
@@ -41,7 +80,7 @@ export const envConfig = {
 }
 
 // Get configuration based on environment
-export const getConfig = (environment = 'development') => {
+export const getConfig = (environment: keyof EnvConfigOverrides = 'development'): AppConfig => {
   return {
     ...defaultConfig,
     ...(envConfig[environment] || {})
@@ -49,7 +88,7 @@ export const getConfig = (environment = 'development') => {
 }
 
 // Export individual config sections for better organization
-export const chargingDefaults = {
+export const chargingDefaults: ChargingDefaults = {
   batteryCapacity: defaultConfig.batteryCapacity,
   pricePerKWh: defaultConfig.pricePerKWh,
   feeType: defaultConfig.feeType,
@@ -57,12 +96,12 @@ export const chargingDefaults = {
   transactionFeePercent: defaultConfig.transactionFeePercent,
 }
 
-export const hybridDefaults = {
+export const hybridDefaults: HybridDefaults = {
   petrolPrice: defaultConfig.petrolPrice,
   petrolUsage: defaultConfig.petrolUsage,
   kwhUsage: defaultConfig.kwhUsage,
 }
 
-export const appDefaults = {
+export const appDefaults: AppDefaults = {
   mode: defaultConfig.mode,
 }

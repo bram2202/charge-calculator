@@ -1,7 +1,12 @@
 # EV Charge calculator
 
-A simple EV/Hybrid charge cost calculator
+[![Test](https://github.com/bram2202/charge-calculator/actions/workflows/test.yml/badge.svg)](https://github.com/bram2202/charge-calculator/actions/workflows/test.yml)
+[![Build and Release](https://github.com/bram2202/charge-calculator/actions/workflows/docker.yml/badge.svg)](https://github.com/bram2202/charge-calculator/actions/workflows/docker.yml)
 
+
+A simple EV/Hybrid charge cost calculator built with Vue 3, TypeScript, and Vuetify.
+
+Available on [ev.bram-dev.nl](https://ev.bram-dev.nl)
 ## Development
 
 ```bash
@@ -9,35 +14,24 @@ npm install
 npm run dev
 ```
 
-## Release Process
+## TypeScript
 
-This project uses [git-cliff](https://git-cliff.org/) for automated changelog generation and semantic versioning.
-
-### Workflow:
-
-1. **Development**: Work on the `main` branch using conventional commits
-2. **Release**: Merge to `production` branch to trigger automated release
-3. **Docker**: Docker images are built and pushed only on releases
-
-### Conventional Commits:
-
-Use conventional commit messages for automatic changelog generation:
-
-- `feat:` - New features (bumps minor version)
-- `fix:` - Bug fixes (bumps patch version)
-- `feat!:` or `fix!:` - Breaking changes (bumps major version)
-- `docs:` - Documentation changes
-- `style:` - Code style changes
-- `refactor:` - Code refactoring
-- `test:` - Test changes
-- `chore:` - Maintenance tasks
-
-### Manual Release:
+This project is built with TypeScript for type safety and developer experience:
 
 ```bash
-# Generate changelog preview
-npm run changelog
+# Run type checking
+npm run type-check
 
-# Create release (generates changelog, creates tag)
-npm run release
+# Build with type checking
+npm run build
+```
+
+## Testing
+
+```bash
+# Run tests
+npm test
+
+# Run tests with coverage
+npm run test:coverage
 ```

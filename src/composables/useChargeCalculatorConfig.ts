@@ -1,8 +1,9 @@
-import { ref, watch } from 'vue'
-import { getConfig } from '../config/defaults.js'
+import { ref, watch, type Ref } from 'vue'
+import { getConfig, type AppConfig } from '@/config/defaults'
+import type { FeeType } from '@/services/ChargeCalculationService'
 
 // Get environment from Vite env variables or default to development
-const environment = import.meta.env.VITE_APP_ENV || 'development'
+const environment = (import.meta.env.VITE_APP_ENV as keyof typeof import('@/config/defaults').envConfig) || 'development'
 
 // Load configuration
 const config = getConfig(environment)
@@ -10,7 +11,19 @@ const config = getConfig(environment)
 // Local storage utilities
 const STORAGE_KEY = 'ev-charge-calculator-settings'
 
-const saveToLocalStorage = (data) => {
+interface StoredSettings {
+  mode?: 'EV' | 'Hybrid'
+  batteryCapacity?: number
+  pricePerKWh?: number
+  feeType?: FeeType
+  startingFee?: number
+  transactionFeePercent?: number
+  petrolPrice?: number
+  petrolUsage?: number
+  kwhUsage?: number
+}
+
+const saveToLocalStorage = (data: StoredSettings): void => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
   } catch (error) {
@@ -18,12 +31,12 @@ const saveToLocalStorage = (data) => {
   }
 }
 
-const loadFromLocalStorage = () => {
+const loadFromLocalStorage = (): StoredSettings | null => {
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (!stored) return null
     
-    return JSON.parse(stored)
+    return JSON.parse(stored) as StoredSettings
   } catch (error) {
     console.warn('Failed to load from localStorage:', error)
     localStorage.removeItem(STORAGE_KEY) // Clean up corrupted data
@@ -32,30 +45,51 @@ const loadFromLocalStorage = () => {
 }
 
 // Override with environment variables if they exist
-const getEnvValue = (key, defaultValue, type = 'string') => {
+const getEnvValue = <T>(key: string, defaultValue: T, type: 'string' | 'number' | 'boolean' = 'string'): T => {
   const envValue = import.meta.env[key]
   if (envValue === undefined) return defaultValue
   
   switch (type) {
     case 'number':
-      return parseFloat(envValue) || defaultValue
+      return (parseFloat(envValue) || defaultValue) as T
     case 'boolean':
-      return envValue === 'true'
+      return (envValue === 'true') as T
     default:
-      return envValue
+      return envValue as T
   }
 }
 
+export interface ChargeCalculatorComposable {
+  // State variables
+  mode: Ref<'EV' | 'Hybrid'>
+  batteryCapacity: Ref<number>
+  pricePerKWh: Ref<number>
+  feeType: Ref<FeeType>
+  startingFee: Ref<number>
+  transactionFeePercent: Ref<number>
+  petrolPrice: Ref<number>
+  petrolUsage: Ref<number>
+  kwhUsage: Ref<number>
+  
+  // Utility functions
+  resetToDefaults: () => void
+  getCurrentConfig: () => AppConfig
+  clearStoredSettings: () => void
+  
+  // Raw config for reference
+  config: AppConfig
+}
+
 // Create reactive state with configuration values
-export const useChargeCalculatorConfig = () => {
+export const useChargeCalculatorConfig = (): ChargeCalculatorComposable => {
   // Try to load saved settings first
   const savedSettings = loadFromLocalStorage()
   
   // Initialize values with saved settings or defaults
-  const getInitialValue = (key, defaultValue, type = 'string') => {
+  const getInitialValue = <T>(key: keyof StoredSettings, defaultValue: T, type: 'string' | 'number' | 'boolean' = 'string'): T => {
     // First check saved settings
     if (savedSettings && savedSettings[key] !== undefined) {
-      return savedSettings[key]
+      return savedSettings[key] as T
     }
     // Then check environment variables
     return getEnvValue(`VITE_DEFAULT_${key.toUpperCase()}`, defaultValue, type)
@@ -75,8 +109,8 @@ export const useChargeCalculatorConfig = () => {
   const kwhUsage = ref(getInitialValue('kwhUsage', config.kwhUsage, 'number'))
 
   // Watch for changes and save to localStorage
-  const saveCurrentSettings = () => {
-    const currentSettings = {
+  const saveCurrentSettings = (): void => {
+    const currentSettings: StoredSettings = {
       mode: mode.value,
       batteryCapacity: batteryCapacity.value,
       pricePerKWh: pricePerKWh.value,
@@ -96,7 +130,7 @@ export const useChargeCalculatorConfig = () => {
   }, { deep: true })
 
   // Reset to defaults function
-  const resetToDefaults = () => {
+  const resetToDefaults = (): void => {
     mode.value = config.mode
     batteryCapacity.value = config.batteryCapacity
     pricePerKWh.value = config.pricePerKWh
@@ -112,7 +146,7 @@ export const useChargeCalculatorConfig = () => {
   }
 
   // Export current configuration
-  const getCurrentConfig = () => ({
+  const getCurrentConfig = (): AppConfig => ({
     mode: mode.value,
     batteryCapacity: batteryCapacity.value,
     pricePerKWh: pricePerKWh.value,
@@ -125,7 +159,7 @@ export const useChargeCalculatorConfig = () => {
   })
 
   // Clear stored settings (useful for debugging or user preference)
-  const clearStoredSettings = () => {
+  const clearStoredSettings = (): void => {
     localStorage.removeItem(STORAGE_KEY)
   }
 
