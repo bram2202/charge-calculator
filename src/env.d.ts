@@ -1,7 +1,10 @@
 /// <reference types="vite/client" />
 
+declare const __APP_VERSION__: string
+
 interface ImportMetaEnv {
   readonly VITE_APP_ENV?: string
+  readonly VITE_APP_VERSION?: string
   readonly VITE_DEFAULT_MODE?: string
   readonly VITE_DEFAULT_BATTERYCAPACITY?: string
   readonly VITE_DEFAULT_PRICEPERKWH?: string

@@ -9,6 +9,11 @@ import UsageSettingsCard from './components/UsageSettingsCard.vue'
 import CalculateButton from './components/CalculateButton.vue'
 import ResultsCard from './components/ResultsCard.vue'
 
+// App version
+const appVersion = computed(() => {
+  return __APP_VERSION__ || 'x.x.x'
+})
+
 // Get configuration and state from composable
 const {
   mode,
@@ -20,6 +25,7 @@ const {
   petrolPrice,
   petrolUsage,
   kwhUsage,
+  useLitersPer100km,
   resetToDefaults,
   getCurrentConfig
 } = useChargeCalculatorConfig()
@@ -129,7 +135,7 @@ const handleReset = () => {
                 <!-- Hybrid Mode Inputs -->
                 <div v-if="mode === 'Hybrid'" class="w-full">
                   <PetrolComparisonCard v-model:petrolPrice="petrolPrice" v-model:petrolUsage="petrolUsage"
-                    v-model:kwhUsage="kwhUsage" />
+                    v-model:kwhUsage="kwhUsage" v-model:useLitersPer100km="useLitersPer100km" />
                 </div>
 
                 <!-- EV Mode Info Card -->
@@ -164,7 +170,7 @@ const handleReset = () => {
                 </a>
               </p>
               <p class="text-xs text-gray-400">
-                © {{ new Date().getFullYear() }} - EV Charge Calculator
+                © {{ new Date().getFullYear() }} - EV Charge Calculator | v{{ appVersion }}
               </p>
             </div>
           </div>
