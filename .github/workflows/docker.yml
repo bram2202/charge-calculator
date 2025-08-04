@@ -101,11 +101,14 @@ jobs:
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "tag=$NEW_VERSION" >> $GITHUB_OUTPUT
           
+          # Update package.json version
+          npm version "$NEW_VERSION" --no-git-tag-version
+          
           # Generate changelog
           npx git-cliff --tag "$NEW_VERSION" > CHANGELOG.md
           
-          # Commit changelog
-          git add CHANGELOG.md
+          # Commit changelog and package.json version bump
+          git add CHANGELOG.md package.json
           git commit -m "chore(release): prepare for $NEW_VERSION"
           
           # Create and push tag
