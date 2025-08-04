@@ -21,17 +21,43 @@
         density="comfortable"
       />
       
+      <!-- Petrol Usage Unit Chips -->
+      <div class="mb-4">
+        <label class="text-sm font-medium text-gray-700 mb-2 block">Petrol Usage Unit</label>
+        <div class="flex gap-2">
+          <v-chip
+            :color="!useLitersPer100km ? 'green' : 'grey-lighten-2'"
+            :variant="!useLitersPer100km ? 'flat' : 'outlined'"
+            @click="$emit('update:useLitersPer100km', false)"
+            clickable
+            class="flex-1 justify-center"
+          >
+            km/l
+          </v-chip>
+          <v-chip
+            :color="useLitersPer100km ? 'green' : 'grey-lighten-2'"
+            :variant="useLitersPer100km ? 'flat' : 'outlined'"
+            @click="$emit('update:useLitersPer100km', true)"
+            clickable
+            class="flex-1 justify-center"
+          >
+            l/100km
+          </v-chip>
+        </div>
+      </div>
+      
       <v-text-field
-        :model-value="petrolUsage"
-        @update:model-value="$emit('update:petrolUsage', parseFloat($event) || 0)"
-        label="Petrol Usage"
-        suffix="km/l"
+        :model-value="displayPetrolUsage"
+        @update:model-value="handlePetrolUsageChange"
+        :label="useLitersPer100km ? 'Petrol Usage (l/100km)' : 'Petrol Usage (km/l)'"
+        :suffix="useLitersPer100km ? 'l/100km' : 'km/l'"
         type="number"
-        step="0.1"
+        step="any"
         variant="outlined"
         color="green"
         class="text-field-mobile"
         density="comfortable"
+        @blur="handleBlur"
       />
 
       <v-text-field
@@ -51,7 +77,9 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed, ref, watch } from 'vue'
+
+const props = defineProps({
   petrolPrice: {
     type: Number,
     required: true
@@ -63,14 +91,92 @@ defineProps({
   kwhUsage: {
     type: Number,
     required: true
+  },
+  useLitersPer100km: {
+    type: Boolean,
+    default: false
   }
 })
 
-defineEmits([
+const emit = defineEmits([
   'update:petrolPrice',
   'update:petrolUsage',
-  'update:kwhUsage'
+  'update:kwhUsage',
+  'update:useLitersPer100km'
 ])
+
+// Track if user is currently editing
+const isEditing = ref(false)
+const inputValue = ref('')
+
+// Convert between km/l and l/100km
+const convertKmPerLiterToLitersPer100km = (kmPerL) => {
+  if (kmPerL === 0) return 0
+  return 100 / kmPerL
+}
+
+const convertLitersPer100kmToKmPerLiter = (litersPer100km) => {
+  if (litersPer100km === 0) return 0
+  return 100 / litersPer100km
+}
+
+// Display the petrol usage in the selected unit
+const displayPetrolUsage = computed(() => {
+  // If user is actively editing, show the raw input value
+  if (isEditing.value && inputValue.value !== '') {
+    return inputValue.value
+  }
+  
+  if (props.useLitersPer100km) {
+    const converted = convertKmPerLiterToLitersPer100km(props.petrolUsage)
+    return converted % 1 === 0 ? converted.toString() : converted.toFixed(1)
+  }
+  return props.petrolUsage % 1 === 0 ? props.petrolUsage.toString() : props.petrolUsage.toFixed(1)
+})
+
+// Watch for unit changes and update display
+watch(() => props.useLitersPer100km, () => {
+  isEditing.value = false
+  inputValue.value = ''
+})
+
+// Handle petrol usage input
+const handlePetrolUsageChange = (value) => {
+  isEditing.value = true
+  inputValue.value = value
+  
+  // Handle empty input
+  if (value === '' || value === null || value === undefined) {
+    return
+  }
+
+  const numValue = parseFloat(value)
+  
+  // Handle NaN case - don't update the prop
+  if (isNaN(numValue)) {
+    return
+  }
+  
+  if (props.useLitersPer100km) {
+    // Convert from l/100km to km/l
+    const kmPerL = convertLitersPer100kmToKmPerLiter(numValue)
+    emit('update:petrolUsage', kmPerL)
+  } else {
+    // Already in km/l
+    emit('update:petrolUsage', numValue)
+  }
+}
+
+// Handle when user finishes editing
+const handleBlur = () => {
+  isEditing.value = false
+  inputValue.value = ''
+  
+  // Ensure we have a valid value
+  if (props.petrolUsage === 0) {
+    emit('update:petrolUsage', 0)
+  }
+}
 </script>
 
 <style scoped>
