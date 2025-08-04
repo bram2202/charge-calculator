@@ -21,6 +21,7 @@ interface StoredSettings {
   petrolPrice?: number
   petrolUsage?: number
   kwhUsage?: number
+  useLitersPer100km?: boolean
 }
 
 const saveToLocalStorage = (data: StoredSettings): void => {
@@ -70,6 +71,7 @@ export interface ChargeCalculatorComposable {
   petrolPrice: Ref<number>
   petrolUsage: Ref<number>
   kwhUsage: Ref<number>
+  useLitersPer100km: Ref<boolean>
   
   // Utility functions
   resetToDefaults: () => void
@@ -107,6 +109,7 @@ export const useChargeCalculatorConfig = (): ChargeCalculatorComposable => {
   const petrolPrice = ref(getInitialValue('petrolPrice', config.petrolPrice, 'number'))
   const petrolUsage = ref(getInitialValue('petrolUsage', config.petrolUsage, 'number'))
   const kwhUsage = ref(getInitialValue('kwhUsage', config.kwhUsage, 'number'))
+  const useLitersPer100km = ref(getInitialValue('useLitersPer100km', false, 'boolean'))
 
   // Watch for changes and save to localStorage
   const saveCurrentSettings = (): void => {
@@ -120,12 +123,13 @@ export const useChargeCalculatorConfig = (): ChargeCalculatorComposable => {
       petrolPrice: petrolPrice.value,
       petrolUsage: petrolUsage.value,
       kwhUsage: kwhUsage.value,
+      useLitersPer100km: useLitersPer100km.value,
     }
     saveToLocalStorage(currentSettings)
   }
 
   // Set up watchers for all reactive values
-  watch([mode, batteryCapacity, pricePerKWh, feeType, startingFee, transactionFeePercent, petrolPrice, petrolUsage, kwhUsage], () => {
+  watch([mode, batteryCapacity, pricePerKWh, feeType, startingFee, transactionFeePercent, petrolPrice, petrolUsage, kwhUsage, useLitersPer100km], () => {
     saveCurrentSettings()
   }, { deep: true })
 
@@ -140,6 +144,7 @@ export const useChargeCalculatorConfig = (): ChargeCalculatorComposable => {
     petrolPrice.value = config.petrolPrice
     petrolUsage.value = config.petrolUsage
     kwhUsage.value = config.kwhUsage
+    useLitersPer100km.value = false
     
     // Clear localStorage when resetting
     localStorage.removeItem(STORAGE_KEY)
@@ -174,6 +179,7 @@ export const useChargeCalculatorConfig = (): ChargeCalculatorComposable => {
     petrolPrice,
     petrolUsage,
     kwhUsage,
+    useLitersPer100km,
     
     // Utility functions
     resetToDefaults,

@@ -25,6 +25,7 @@ const {
   petrolPrice,
   petrolUsage,
   kwhUsage,
+  useLitersPer100km,
   resetToDefaults,
   getCurrentConfig
 } = useChargeCalculatorConfig()
@@ -134,7 +135,7 @@ const handleReset = () => {
                 <!-- Hybrid Mode Inputs -->
                 <div v-if="mode === 'Hybrid'" class="w-full">
                   <PetrolComparisonCard v-model:petrolPrice="petrolPrice" v-model:petrolUsage="petrolUsage"
-                    v-model:kwhUsage="kwhUsage" />
+                    v-model:kwhUsage="kwhUsage" v-model:useLitersPer100km="useLitersPer100km" />
                 </div>
 
                 <!-- EV Mode Info Card -->

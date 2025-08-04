@@ -20,21 +20,6 @@
         class="text-field-mobile"
         density="comfortable"
       />
-      
-      <v-alert
-        type="info"
-        variant="tonal"
-        class="mt-3 text-left rounded-xl"
-        color="purple"
-      >
-        <template #title>
-          <span class="text-base sm:text-lg font-semibold">Estimated Range</span>
-        </template>
-        <div class="mt-2 text-sm sm:text-base">
-          With <strong>{{ batteryCapacity }} kWh</strong>, you can drive approximately 
-          <strong class="text-purple-700">{{ kmRange.toFixed(0) }} km</strong>
-        </div>
-      </v-alert>
     </v-card-text>
   </v-card>
 </template>
