@@ -4,6 +4,7 @@ import { useChargeCalculatorConfig } from '@/composables/useChargeCalculatorConf
 import { ChargeCalculationService } from '@/services/ChargeCalculationService'
 import ModeSelector from './components/ModeSelector.vue'
 import ChargingDetailsCard from './components/ChargingDetailsCard.vue'
+import ChargingConfigCard from './components/ChargingConfigCard.vue'
 import PetrolComparisonCard from './components/PetrolComparisonCard.vue'
 import UsageSettingsCard from './components/UsageSettingsCard.vue'
 import CalculateButton from './components/CalculateButton.vue'
@@ -26,6 +27,8 @@ const {
   petrolUsage,
   kwhUsage,
   useLitersPer100km,
+  carPhases,
+  chargingPower,
   resetToDefaults,
   getCurrentConfig
 } = useChargeCalculatorConfig()
@@ -90,6 +93,24 @@ const isChargingCheaper = computed(() => {
   return true
 })
 
+const chargeTime = computed(() => {
+  try {
+    return ChargeCalculationService.calculateChargeTime({
+      batteryCapacity: batteryCapacity.value,
+      carPhases: carPhases.value,
+      chargingPower: chargingPower.value
+    })
+  } catch (error) {
+    console.warn('Error calculating charge time:', error.message)
+    return {
+      chargeTimeHours: 0,
+      chargeTimeMinutes: 0,
+      actualChargingPower: 0,
+      formattedTime: '0m'
+    }
+  }
+})
+
 const handleReset = () => {
   resetToDefaults()
   console.log('Reset to defaults')
@@ -126,12 +147,20 @@ const handleReset = () => {
               <!-- Input Cards Grid -->
               <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
                 <!-- Basic EV Inputs -->
-                <div class="w-full mb-8">
+                <div class="w-full">
                   <ChargingDetailsCard v-model:batteryCapacity="batteryCapacity" v-model:pricePerKWh="pricePerKWh"
                     v-model:feeType="feeType" v-model:startingFee="startingFee"
                     v-model:transactionFeePercent="transactionFeePercent" />
                 </div>
 
+                <!-- Charging Configuration -->
+                <div class="w-full">
+                  <ChargingConfigCard v-model:carPhases="carPhases" v-model:chargingPower="chargingPower" />
+                </div>
+              </div>
+
+              <!-- Secondary Grid for Mode-specific Cards -->
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
                 <!-- Hybrid Mode Inputs -->
                 <div v-if="mode === 'Hybrid'" class="w-full">
                   <PetrolComparisonCard v-model:petrolPrice="petrolPrice" v-model:petrolUsage="petrolUsage"
@@ -156,7 +185,7 @@ const handleReset = () => {
 
               <!-- Results -->
               <ResultsCard :mode="mode" :isChargingCheaper="isChargingCheaper" :chargingCost="chargingCost"
-                :petrolCost="petrolCost" :kmRange="kmRange" />
+                :petrolCost="petrolCost" :kmRange="kmRange" :chargeTime="chargeTime" />
             </v-card-text>
           </v-card>
 

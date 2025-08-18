@@ -23,7 +23,7 @@
                 class="rounded-xl shadow-sm hover:shadow-md transition-all duration-200 backdrop-blur-sm mb-2 border-gray-200 bg-white/80">
                 <v-card-text class="text-center p-4 sm:p-6">
                   <v-icon icon="mdi-battery-charging" size="32" color="blue" class="mb-3" />
-                  <div class="text-base sm:text-lg font-semibold text-gray-700 mb-2">
+                  <div class="text-base sm:text-lg font-semibold text-gray-500 mb-2">
                     Electric Charging
                   </div>
                   <div class="text-xl sm:text-2xl font-bold text-blue-600">
@@ -39,7 +39,7 @@
                 class="rounded-xl shadow-sm hover:shadow-md transition-all duration-200 backdrop-blur-sm border-gray-200 bg-white/80">
                 <v-card-text class="text-center p-4 sm:p-6">
                   <v-icon icon="mdi-gas-station" size="32" color="orange" class="mb-3" />
-                  <div class="text-base sm:text-lg font-semibold text-gray-700 mb-2">
+                  <div class="text-base sm:text-lg font-semibold text-gray-500 mb-2">
                     Petrol Equivalent
                   </div>
                   <div class="text-xl sm:text-2xl font-bold text-orange-600">
@@ -55,21 +55,38 @@
           </div>
 
           <!-- EV Mode additional info -->
-          <div v-if="mode === 'EV'" class="mt-6 sm:mt-8 w-full max-w-md">
-            <v-card variant="outlined" class="rounded-xl shadow-sm bg-white/80 backdrop-blur-sm">
-              <v-card-text class="text-center p-4 sm:p-6">
-                <v-icon icon="mdi-map-marker-distance" size="32" color="purple" class="mb-3" />
-                <div class="text-base sm:text-lg font-semibold text-gray-700 mb-2">
-                  Estimated Range
-                </div>
-                <div class="text-xl sm:text-2xl font-bold text-purple-600">
-                  {{ kmRange.toFixed(0) }} km
-                </div>
-                <div class="text-xs sm:text-sm text-gray-500 mt-1">
-                  per full charge
-                </div>
-              </v-card-text>
-            </v-card>
+          <div v-if="mode === 'EV'" class="mt-6 sm:mt-8 w-full max-w-2xl">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <v-card variant="outlined" class="rounded-xl shadow-sm bg-white/80 backdrop-blur-sm">
+                <v-card-text class="text-center p-4 sm:p-6">
+                  <v-icon icon="mdi-map-marker-distance" size="32" color="purple" class="mb-3" />
+                  <div class="text-base sm:text-lg font-semibold text-gray-500 mb-2">
+                    Estimated Range
+                  </div>
+                  <div class="text-xl sm:text-2xl font-bold text-purple-600">
+                    {{ kmRange.toFixed(0) }} km
+                  </div>
+                  <div class="text-xs sm:text-sm text-gray-500 mt-1">
+                    per full charge
+                  </div>
+                </v-card-text>
+              </v-card>
+            </div>
+          </div>
+
+          <!-- Hybrid Mode - add charge time info -->
+          <div class="mt-4 sm:mt-6 w-full max-w-2xl">
+              <v-card variant="outlined" class="rounded-xl shadow-sm bg-white/80 backdrop-blur-sm">
+                <v-card-text class="text-center p-4 sm:p-6">
+                  <v-icon icon="mdi-clock-outline" size="32" color="green" class="mb-3" />
+                  <div class="text-base sm:text-lg font-semibold text-gray-500 mb-2">
+                    Estimated Charge Time
+                  </div>
+                  <div class="text-xl sm:text-2xl font-bold text-green-600">
+                    {{ chargeTime.formattedTime }}
+                  </div>
+                </v-card-text>
+              </v-card>
           </div>
         </div>
       </v-card-text>
@@ -99,6 +116,10 @@ const props = defineProps({
   },
   kmRange: {
     type: Number,
+    required: true
+  },
+  chargeTime: {
+    type: Object,
     required: true
   }
 })
