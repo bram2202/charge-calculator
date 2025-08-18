@@ -8,7 +8,8 @@ import { ChargeCalculationService } from '@/services/ChargeCalculationService'
  * - All public methods with various input combinations
  * - Error handling for invalid inputs (negative values, NaN, etc.)
  * - Boundary conditions (zero values, very large numbers)
- * - Floating point precision handling
+       expect(result.chargeTime.actualChargingPower).toBeCloseTo(5.94, 2) // (22/3) * 0.9 * 0.9 ≈ 5.94kW
+      expect(result.chargeTime.chargeTimeHours).toBeCloseTo(13.47, 2) // 80 / 5.94 ≈ 13.47- Floating point precision handling
  * - Both fixed and percentage fee calculations
  * - Complete integration tests for hybrid and EV modes
  * 
@@ -330,8 +331,8 @@ describe('ChargeCalculationService', () => {
       expect(result.savings).toBe(16.25)
       expect(result.cheaperOption).toBe('charging')
       expect(result.costDifference).toBe(16.25)
-      expect(result.chargeTime.actualChargingPower).toBeCloseTo(8.415, 2) // 11 * 0.9 * 0.85 = 8.415
-      expect(result.chargeTime.chargeTimeHours).toBeCloseTo(5.94, 2) // 50 / 8.415 ≈ 5.94
+      expect(result.chargeTime.actualChargingPower).toBeCloseTo(8.91, 2) // 11 * 0.9 * 0.9 = 8.91
+      expect(result.chargeTime.chargeTimeHours).toBeCloseTo(5.61, 2) // 50 / 8.91 ≈ 5.61
     })
 
     it('should handle percentage fee in hybrid comparison', () => {
@@ -353,8 +354,8 @@ describe('ChargeCalculationService', () => {
       expect(result.chargingCost).toBe(20.7) // (60 * 0.30) + (18 * 0.15)
       expect(result.kmRange).toBeCloseTo(333.33, 2) // 60 / 0.18
       expect(result.petrolCost).toBeCloseTo(33.33, 2) // (333.33 / 14) * 1.40
-      expect(result.chargeTime.actualChargingPower).toBeCloseTo(2.805, 2) // (11/3) * 0.9 * 0.85 ≈ 2.805kW
-      expect(result.chargeTime.chargeTimeHours).toBeCloseTo(21.39, 2) // 60 / 2.805 ≈ 21.39
+      expect(result.chargeTime.actualChargingPower).toBeCloseTo(2.97, 2) // (11/3) * 0.9 * 0.9 ≈ 2.97kW
+      expect(result.chargeTime.chargeTimeHours).toBeCloseTo(20.20, 2) // 60 / 2.97 ≈ 20.20
     })
   })
 
@@ -377,8 +378,8 @@ describe('ChargeCalculationService', () => {
       expect(result.kmRange).toBe(468.75) // 75 / 0.16
       expect(result.isChargingCheaper).toBe(true)
       expect(result.petrolCost).toBe(0)
-      expect(result.chargeTime.actualChargingPower).toBeCloseTo(16.83, 2) // 22 * 0.9 * 0.85 = 16.83
-      expect(result.chargeTime.chargeTimeHours).toBeCloseTo(4.46, 2) // 75 / 16.83 ≈ 4.46
+      expect(result.chargeTime.actualChargingPower).toBeCloseTo(17.82, 2) // 22 * 0.9 * 0.9 = 17.82
+      expect(result.chargeTime.chargeTimeHours).toBeCloseTo(4.21, 2) // 75 / 17.82 ≈ 4.21
     })
 
     it('should handle percentage fee in EV calculation', () => {
@@ -399,8 +400,8 @@ describe('ChargeCalculationService', () => {
       expect(result.kmRange).toBeCloseTo(363.64, 2) // 80 / 0.22
       expect(result.isChargingCheaper).toBe(true)
       expect(result.petrolCost).toBe(0)
-      expect(result.chargeTime.actualChargingPower).toBeCloseTo(5.61, 2) // (22/3) * 0.9 * 0.85 ≈ 5.61kW
-      expect(result.chargeTime.chargeTimeHours).toBeCloseTo(14.26, 2) // 80 / 5.61 ≈ 14.26
+      expect(result.chargeTime.actualChargingPower).toBeCloseTo(5.94, 2) // (22/3) * 0.9 * 0.9 ≈ 5.94kW
+      expect(result.chargeTime.chargeTimeHours).toBeCloseTo(13.47, 2) // 80 / 5.94 ≈ 13.47
     })
   })
 
@@ -450,8 +451,8 @@ describe('ChargeCalculationService', () => {
       expect(result.chargingCost).toBe(1575) // (1000 * 1.5) + (1500 * 0.05)
       expect(result.kmRange).toBe(10000) // 1000 / 0.1
       expect(result.petrolCost).toBe(1000) // (10000 / 20) * 2.0
-      expect(result.chargeTime.actualChargingPower).toBeCloseTo(16.83, 2) // 22 * 0.9 * 0.85 = 16.83
-      expect(result.chargeTime.chargeTimeHours).toBeCloseTo(59.42, 2) // 1000 / 16.83 ≈ 59.42
+      expect(result.chargeTime.actualChargingPower).toBeCloseTo(17.82, 2) // 22 * 0.9 * 0.9 = 17.82
+      expect(result.chargeTime.chargeTimeHours).toBeCloseTo(56.12, 2) // 1000 / 17.82 ≈ 56.12
     })
 
     it('should handle decimal precision correctly', () => {
@@ -470,8 +471,8 @@ describe('ChargeCalculationService', () => {
       
       expect(result.chargingCost).toBeCloseTo(11.93, 2)
       expect(result.kmRange).toBeCloseTo(188.31, 1) // 33.33 / 0.177 ≈ 188.31
-      expect(result.chargeTime.actualChargingPower).toBeCloseTo(2.805, 2) // (11/3) * 0.9 * 0.85 ≈ 2.805
-      expect(result.chargeTime.chargeTimeHours).toBeCloseTo(11.88, 2) // 33.33 / 2.805 ≈ 11.88
+      expect(result.chargeTime.actualChargingPower).toBeCloseTo(2.97, 2) // (11/3) * 0.9 * 0.9 ≈ 2.97
+      expect(result.chargeTime.chargeTimeHours).toBeCloseTo(11.22, 2) // 33.33 / 2.97 ≈ 11.22
     })
   })
 
@@ -485,11 +486,11 @@ describe('ChargeCalculationService', () => {
 
       const result = ChargeCalculationService.calculateChargeTime(params)
       
-      // With efficiency (90%) and ramp-up (85%) factors: 11 * 0.9 * 0.85 = 8.415 kW
-      expect(result.actualChargingPower).toBeCloseTo(8.415, 2)
-      expect(result.chargeTimeHours).toBeCloseTo(5.94, 2) // 50 / 8.415 ≈ 5.94
-      expect(result.chargeTimeMinutes).toBe(357) // 5.94 * 60 ≈ 357 minutes
-      expect(result.formattedTime).toBe('5h 57m')
+      // With efficiency (90%) and ramp-up (90%) factors: 11 * 0.9 * 0.9 = 8.91 kW
+      expect(result.actualChargingPower).toBeCloseTo(8.91, 2)
+      expect(result.chargeTimeHours).toBeCloseTo(5.61, 2) // 50 / 8.91 ≈ 5.61
+      expect(result.chargeTimeMinutes).toBe(337) // 5.61 * 60 ≈ 337 minutes
+      expect(result.formattedTime).toBe('5h 37m')
     })
 
     it('should calculate charge time for 1-phase car with 11kW charger', () => {
@@ -501,11 +502,11 @@ describe('ChargeCalculationService', () => {
 
       const result = ChargeCalculationService.calculateChargeTime(params)
       
-      // 1-phase gets 1/3 power, then efficiency factors: (11/3) * 0.9 * 0.85 ≈ 2.805 kW
-      expect(result.actualChargingPower).toBeCloseTo(2.805, 2)
-      expect(result.chargeTimeHours).toBeCloseTo(26.74, 2) // 75 / 2.805 ≈ 26.74
-      expect(result.chargeTimeMinutes).toBe(1604) // 26.74 * 60 ≈ 1604 minutes
-      expect(result.formattedTime).toBe('26h 44m')
+      // 1-phase gets 1/3 power, then efficiency factors: (11/3) * 0.9 * 0.9 ≈ 2.97 kW
+      expect(result.actualChargingPower).toBeCloseTo(2.97, 2)
+      expect(result.chargeTimeHours).toBeCloseTo(25.25, 2) // 75 / 2.97 ≈ 25.25
+      expect(result.chargeTimeMinutes).toBe(1515) // 25.25 * 60 ≈ 1515 minutes
+      expect(result.formattedTime).toBe('25h 15m')
     })
 
     it('should calculate charge time for 3-phase car with 22kW charger', () => {
@@ -517,11 +518,11 @@ describe('ChargeCalculationService', () => {
 
       const result = ChargeCalculationService.calculateChargeTime(params)
       
-      // With efficiency factors: 22 * 0.9 * 0.85 = 16.83 kW
-      expect(result.actualChargingPower).toBeCloseTo(16.83, 2)
-      expect(result.chargeTimeHours).toBeCloseTo(5.94, 2) // 100 / 16.83 ≈ 5.94
-      expect(result.chargeTimeMinutes).toBe(357) // 5.94 * 60 ≈ 357 minutes
-      expect(result.formattedTime).toBe('5h 57m')
+      // With efficiency factors: 22 * 0.9 * 0.9 = 17.82 kW
+      expect(result.actualChargingPower).toBeCloseTo(17.82, 2)
+      expect(result.chargeTimeHours).toBeCloseTo(5.61, 2) // 100 / 17.82 ≈ 5.61
+      expect(result.chargeTimeMinutes).toBe(337) // 5.61 * 60 ≈ 337 minutes
+      expect(result.formattedTime).toBe('5h 37m')
     })
 
     it('should calculate charge time for 1-phase car with 22kW charger', () => {
@@ -533,11 +534,11 @@ describe('ChargeCalculationService', () => {
 
       const result = ChargeCalculationService.calculateChargeTime(params)
       
-      // 1-phase gets 1/3, then efficiency factors: (22/3) * 0.9 * 0.85 ≈ 5.61 kW
-      expect(result.actualChargingPower).toBeCloseTo(5.61, 2)
-      expect(result.chargeTimeHours).toBeCloseTo(10.70, 2) // 60 / 5.61 ≈ 10.70
-      expect(result.chargeTimeMinutes).toBe(642) // 10.70 * 60 ≈ 642 minutes
-      expect(result.formattedTime).toBe('10h 42m')
+      // 1-phase gets 1/3, then efficiency factors: (22/3) * 0.9 * 0.9 ≈ 5.94 kW
+      expect(result.actualChargingPower).toBeCloseTo(5.94, 2)
+      expect(result.chargeTimeHours).toBeCloseTo(10.10, 2) // 60 / 5.94 ≈ 10.10
+      expect(result.chargeTimeMinutes).toBe(606) // 10.10 * 60 ≈ 606 minutes
+      expect(result.formattedTime).toBe('10h 6m')
     })
 
     it('should format short charge times correctly', () => {
@@ -549,9 +550,9 @@ describe('ChargeCalculationService', () => {
 
       const result = ChargeCalculationService.calculateChargeTime(params)
       
-      // With efficiency factors: 5 / (22 * 0.9 * 0.85) ≈ 0.297 hours ≈ 18 minutes
-      expect(result.chargeTimeHours).toBeCloseTo(0.297, 2)
-      expect(result.formattedTime).toBe('18m')
+      // With efficiency factors: 5 / (22 * 0.9 * 0.9) ≈ 0.281 hours ≈ 17 minutes
+      expect(result.chargeTimeHours).toBeCloseTo(0.281, 2)
+      expect(result.formattedTime).toBe('17m')
     })
 
     it('should throw error for invalid battery capacity', () => {
