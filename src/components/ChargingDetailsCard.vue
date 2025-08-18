@@ -33,59 +33,60 @@
         density="comfortable"
       />
 
-      <div class="space-y-3">
-        <v-radio-group 
-          :model-value="feeType" 
-          @update:model-value="$emit('update:feeType', $event)"
-          class="radio-group-mobile"
-        >
-          <template #label>
-            <span class="text-sm sm:text-base font-medium text-gray-700">Fee Type</span>
-          </template>
-          <div class="flex flex-col sm:flex-row gap-2 sm:gap-4">
-            <v-radio 
-              label="Fixed Starting Fee" 
-              value="fixed" 
-              color="blue"
-              class="radio-mobile"
-            />
-            <v-radio 
-              label="Transaction Fee %" 
-              value="percentage" 
-              color="blue"
-              class="radio-mobile"
-            />
-          </div>
-        </v-radio-group>
-
-        <v-text-field
-          v-if="feeType === 'fixed'"
-          :model-value="startingFee"
-          @update:model-value="$emit('update:startingFee', parseFloat($event) || 0)"
-          label="Starting Fee"
-          prefix="€"
-          type="number"
-          step="0.01"
-          variant="outlined"
-          color="blue"
-          class="text-field-mobile"
-          density="comfortable"
-        />
-
-        <v-text-field
-          v-if="feeType === 'percentage'"
-          :model-value="transactionFeePercent"
-          @update:model-value="$emit('update:transactionFeePercent', parseFloat($event) || 0)"
-          label="Transaction Fee"
-          suffix="%"
-          type="number"
-          step="0.1"
-          variant="outlined"
-          color="blue"
-          class="text-field-mobile"
-          density="comfortable"
-        />
+      <!-- Fee Type Chips -->
+      <div class="mb-4">
+        <label class="text-sm font-medium text-gray-500 mb-2 block">Fee Type</label>
+        <div class="flex chip-gap">
+          <v-chip
+            :color="feeType === 'fixed' ? 'blue' : 'grey-lighten-1'"
+            :variant="feeType === 'fixed' ? 'flat' : 'outlined'"
+            @click="$emit('update:feeType', 'fixed')"
+            clickable
+            class="flex-1 justify-center"
+            :class="{ 'text-gray-500': feeType !== 'fixed' }"
+          >
+            Fixed Starting Fee
+          </v-chip>
+          <v-chip
+            :color="feeType === 'percentage' ? 'blue' : 'grey-lighten-1'"
+            :variant="feeType === 'percentage' ? 'flat' : 'outlined'"
+            @click="$emit('update:feeType', 'percentage')"
+            clickable
+            class="flex-1 justify-center"
+            :class="{ 'text-gray-500': feeType !== 'percentage' }"
+          >
+            Transaction Fee %
+          </v-chip>
+        </div>
       </div>
+
+      <v-text-field
+        v-if="feeType === 'fixed'"
+        :model-value="startingFee"
+        @update:model-value="$emit('update:startingFee', parseFloat($event) || 0)"
+        label="Starting Fee"
+        prefix="€"
+        type="number"
+        step="0.01"
+        variant="outlined"
+        color="blue"
+        class="text-field-mobile"
+        density="comfortable"
+      />
+
+      <v-text-field
+        v-if="feeType === 'percentage'"
+        :model-value="transactionFeePercent"
+        @update:model-value="$emit('update:transactionFeePercent', parseFloat($event) || 0)"
+        label="Transaction Fee"
+        suffix="%"
+        type="number"
+        step="0.1"
+        variant="outlined"
+        color="blue"
+        class="text-field-mobile"
+        density="comfortable"
+      />
     </v-card-text>
   </v-card>
 </template>
@@ -172,15 +173,18 @@ defineEmits([
   font-size: 0.875rem;
 }
 
+/* Chip gap styling */
+.chip-gap {
+  gap: 0.75rem !important;
+}
+
 @media (max-width: 640px) {
   .text-field-mobile :deep(.v-field__input) {
     font-size: 16px; /* Prevents zoom on iOS */
     outline: none !important;
   }
 }
-</style>
 
-<style scoped>
 .space-y-4 > * + * {
   margin-top: 1rem;
 }
