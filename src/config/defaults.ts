@@ -11,6 +11,8 @@ export interface AppConfig {
   kwhUsage: number
   petrolPrice: number
   petrolUsage: number
+  carPhases: 1 | 3
+  chargingPower: 11 | 22
 }
 
 export interface EnvConfigOverrides {
@@ -25,6 +27,8 @@ export interface ChargingDefaults {
   feeType: FeeType
   startingFee: number
   transactionFeePercent: number
+  carPhases: 1 | 3
+  chargingPower: 11 | 22
 }
 
 export interface HybridDefaults {
@@ -48,6 +52,8 @@ export const defaultConfig: AppConfig = {
   feeType: 'fixed', // 'fixed' or 'percentage'
   startingFee: 0.5, // € (when feeType is 'fixed')
   transactionFeePercent: 5, // % (when feeType is 'percentage')
+  carPhases: 3, // 1 or 3 phase
+  chargingPower: 11, // 11 or 22 kW
   
   // Electric usage
   kwhUsage: 0.2, // kWh/km
@@ -94,6 +100,8 @@ export const chargingDefaults: ChargingDefaults = {
   feeType: defaultConfig.feeType,
   startingFee: defaultConfig.startingFee,
   transactionFeePercent: defaultConfig.transactionFeePercent,
+  carPhases: defaultConfig.carPhases,
+  chargingPower: defaultConfig.chargingPower,
 }
 
 export const hybridDefaults: HybridDefaults = {

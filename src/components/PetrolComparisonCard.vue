@@ -23,23 +23,25 @@
       
       <!-- Petrol Usage Unit Chips -->
       <div class="mb-4">
-        <label class="text-sm font-medium text-gray-700 mb-2 block">Petrol Usage Unit</label>
-        <div class="flex gap-2">
+        <label class="text-sm font-medium text-gray-500 mb-2 block">Petrol Usage Unit</label>
+        <div class="flex chip-gap">
           <v-chip
-            :color="!useLitersPer100km ? 'green' : 'grey-lighten-2'"
+            :color="!useLitersPer100km ? 'green' : 'grey-lighten-1'"
             :variant="!useLitersPer100km ? 'flat' : 'outlined'"
             @click="$emit('update:useLitersPer100km', false)"
             clickable
             class="flex-1 justify-center"
+            :class="{ 'text-gray-500': useLitersPer100km }"
           >
             km/l
           </v-chip>
           <v-chip
-            :color="useLitersPer100km ? 'green' : 'grey-lighten-2'"
+            :color="useLitersPer100km ? 'green' : 'grey-lighten-1'"
             :variant="useLitersPer100km ? 'flat' : 'outlined'"
             @click="$emit('update:useLitersPer100km', true)"
             clickable
             class="flex-1 justify-center"
+            :class="{ 'text-gray-500': !useLitersPer100km }"
           >
             l/100km
           </v-chip>
@@ -222,6 +224,11 @@ const handleBlur = () => {
 .text-field-mobile:focus-within {
   outline: none !important;
   box-shadow: none !important;
+}
+
+/* Chip gap styling */
+.chip-gap {
+  gap: 0.75rem !important;
 }
 
 @media (max-width: 640px) {

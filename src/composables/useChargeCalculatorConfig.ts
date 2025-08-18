@@ -22,6 +22,8 @@ interface StoredSettings {
   petrolUsage?: number
   kwhUsage?: number
   useLitersPer100km?: boolean
+  carPhases?: 1 | 3
+  chargingPower?: 11 | 22
 }
 
 const saveToLocalStorage = (data: StoredSettings): void => {
@@ -72,6 +74,8 @@ export interface ChargeCalculatorComposable {
   petrolUsage: Ref<number>
   kwhUsage: Ref<number>
   useLitersPer100km: Ref<boolean>
+  carPhases: Ref<1 | 3>
+  chargingPower: Ref<11 | 22>
   
   // Utility functions
   resetToDefaults: () => void
@@ -105,6 +109,10 @@ export const useChargeCalculatorConfig = (): ChargeCalculatorComposable => {
   const startingFee = ref(getInitialValue('startingFee', config.startingFee, 'number'))
   const transactionFeePercent = ref(getInitialValue('transactionFeePercent', config.transactionFeePercent, 'number'))
   
+  // Charging configuration
+  const carPhases = ref(getInitialValue('carPhases', config.carPhases, 'number'))
+  const chargingPower = ref(getInitialValue('chargingPower', config.chargingPower, 'number'))
+  
   // Hybrid mode specific
   const petrolPrice = ref(getInitialValue('petrolPrice', config.petrolPrice, 'number'))
   const petrolUsage = ref(getInitialValue('petrolUsage', config.petrolUsage, 'number'))
@@ -124,12 +132,14 @@ export const useChargeCalculatorConfig = (): ChargeCalculatorComposable => {
       petrolUsage: petrolUsage.value,
       kwhUsage: kwhUsage.value,
       useLitersPer100km: useLitersPer100km.value,
+      carPhases: carPhases.value,
+      chargingPower: chargingPower.value,
     }
     saveToLocalStorage(currentSettings)
   }
 
   // Set up watchers for all reactive values
-  watch([mode, batteryCapacity, pricePerKWh, feeType, startingFee, transactionFeePercent, petrolPrice, petrolUsage, kwhUsage, useLitersPer100km], () => {
+  watch([mode, batteryCapacity, pricePerKWh, feeType, startingFee, transactionFeePercent, petrolPrice, petrolUsage, kwhUsage, useLitersPer100km, carPhases, chargingPower], () => {
     saveCurrentSettings()
   }, { deep: true })
 
@@ -145,6 +155,8 @@ export const useChargeCalculatorConfig = (): ChargeCalculatorComposable => {
     petrolUsage.value = config.petrolUsage
     kwhUsage.value = config.kwhUsage
     useLitersPer100km.value = false
+    carPhases.value = config.carPhases
+    chargingPower.value = config.chargingPower
     
     // Clear localStorage when resetting
     localStorage.removeItem(STORAGE_KEY)
@@ -161,6 +173,8 @@ export const useChargeCalculatorConfig = (): ChargeCalculatorComposable => {
     petrolPrice: petrolPrice.value,
     petrolUsage: petrolUsage.value,
     kwhUsage: kwhUsage.value,
+    carPhases: carPhases.value,
+    chargingPower: chargingPower.value,
   })
 
   // Clear stored settings (useful for debugging or user preference)
@@ -180,6 +194,8 @@ export const useChargeCalculatorConfig = (): ChargeCalculatorComposable => {
     petrolUsage,
     kwhUsage,
     useLitersPer100km,
+    carPhases,
+    chargingPower,
     
     // Utility functions
     resetToDefaults,
