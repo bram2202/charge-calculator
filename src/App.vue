@@ -29,6 +29,9 @@ const {
   useLitersPer100km,
   carPhases,
   chargingPower,
+  isChargingSettingsExpanded,
+  isUsageSettingsExpanded,
+  isPetrolComparisonExpanded,
   resetToDefaults,
   getCurrentConfig
 } = useChargeCalculatorConfig()
@@ -155,7 +158,8 @@ const handleReset = () => {
 
                 <!-- Charging Configuration -->
                 <div class="w-full">
-                  <ChargingConfigCard v-model:carPhases="carPhases" v-model:chargingPower="chargingPower" />
+                  <ChargingConfigCard v-model:carPhases="carPhases" v-model:chargingPower="chargingPower" 
+                    v-model:isExpanded="isChargingSettingsExpanded" />
                 </div>
               </div>
 
@@ -164,13 +168,14 @@ const handleReset = () => {
                 <!-- Hybrid Mode Inputs -->
                 <div v-if="mode === 'Hybrid'" class="w-full">
                   <PetrolComparisonCard v-model:petrolPrice="petrolPrice" v-model:petrolUsage="petrolUsage"
-                    v-model:kwhUsage="kwhUsage" v-model:useLitersPer100km="useLitersPer100km" />
+                    v-model:kwhUsage="kwhUsage" v-model:useLitersPer100km="useLitersPer100km" 
+                    v-model:isExpanded="isPetrolComparisonExpanded" />
                 </div>
 
                 <!-- EV Mode Info Card -->
                 <div v-if="mode === 'EV'" class="w-full">
                   <UsageSettingsCard v-model:kwhUsage="kwhUsage" :batteryCapacity="batteryCapacity"
-                    :kmRange="kmRange" />
+                    :kmRange="kmRange" v-model:isExpanded="isUsageSettingsExpanded" />
                 </div>
               </div>
 
