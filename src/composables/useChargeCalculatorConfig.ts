@@ -77,6 +77,11 @@ export interface ChargeCalculatorComposable {
   carPhases: Ref<1 | 3>
   chargingPower: Ref<11 | 22>
   
+  // Collapsible state
+  isChargingSettingsExpanded: Ref<boolean>
+  isUsageSettingsExpanded: Ref<boolean>
+  isPetrolComparisonExpanded: Ref<boolean>
+  
   // Utility functions
   resetToDefaults: () => void
   getCurrentConfig: () => AppConfig
@@ -118,6 +123,11 @@ export const useChargeCalculatorConfig = (): ChargeCalculatorComposable => {
   const petrolUsage = ref(getInitialValue('petrolUsage', config.petrolUsage, 'number'))
   const kwhUsage = ref(getInitialValue('kwhUsage', config.kwhUsage, 'number'))
   const useLitersPer100km = ref(getInitialValue('useLitersPer100km', false, 'boolean'))
+
+  // Collapsible state - default to expanded (true)
+  const isChargingSettingsExpanded = ref(true)
+  const isUsageSettingsExpanded = ref(true)
+  const isPetrolComparisonExpanded = ref(true)
 
   // Watch for changes and save to localStorage
   const saveCurrentSettings = (): void => {
@@ -196,6 +206,11 @@ export const useChargeCalculatorConfig = (): ChargeCalculatorComposable => {
     useLitersPer100km,
     carPhases,
     chargingPower,
+    
+    // Collapsible state
+    isChargingSettingsExpanded,
+    isUsageSettingsExpanded,
+    isPetrolComparisonExpanded,
     
     // Utility functions
     resetToDefaults,

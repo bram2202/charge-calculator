@@ -1,12 +1,19 @@
 <template>
   <v-card variant="outlined" class="h-full rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 border-gray-200">
-    <v-card-title class="bg-gradient-to-r from-green-50 to-green-100 text-green-800 py-4 px-4 sm:px-6 rounded-t-xl">
-      <div class="flex items-center gap-2">
-        <v-icon icon="mdi-gas-station" size="24" />
-        <span class="text-lg sm:text-xl font-semibold">Petrol Comparison</span>
+    <v-card-title class="bg-gradient-to-r from-green-50 to-green-100 text-green-800 py-4 px-4 sm:px-6 rounded-t-xl cursor-pointer" @click="$emit('update:isExpanded', !isExpanded)">
+      <div class="flex items-center justify-between w-full">
+        <div class="flex items-center gap-2">
+          <v-icon icon="mdi-gas-station" size="24" />
+          <span class="text-lg sm:text-xl font-semibold">Petrol Comparison</span>
+        </div>
+        <v-icon 
+          :icon="isExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down'" 
+          size="24" 
+          class="transition-transform duration-200"
+        />
       </div>
     </v-card-title>
-    <v-card-text class="p-4 sm:p-6 space-y-4 sm:space-y-5">
+    <v-card-text v-show="isExpanded" class="p-4 sm:p-6 space-y-4 sm:space-y-5">
       <v-text-field
         :model-value="petrolPrice"
         @update:model-value="$emit('update:petrolPrice', parseFloat($event) || 0)"
@@ -62,13 +69,40 @@
         @blur="handleBlur"
       />
 
+      <!-- Electric Usage Unit Chips -->
+      <div class="mb-4">
+        <label class="text-sm font-medium text-gray-500 mb-2 block">Electric Usage Unit</label>
+        <div class="flex chip-gap">
+          <v-chip
+            :color="electricUsageUnit === 'kwh' ? 'green' : 'grey-lighten-1'"
+            :variant="electricUsageUnit === 'kwh' ? 'flat' : 'outlined'"
+            @click="handleElectricUnitChange('kwh')"
+            clickable
+            class="flex-1 justify-center"
+            :class="{ 'text-gray-500': electricUsageUnit !== 'kwh' }"
+          >
+            kWh/km
+          </v-chip>
+          <v-chip
+            :color="electricUsageUnit === 'wh' ? 'green' : 'grey-lighten-1'"
+            :variant="electricUsageUnit === 'wh' ? 'flat' : 'outlined'"
+            @click="handleElectricUnitChange('wh')"
+            clickable
+            class="flex-1 justify-center"
+            :class="{ 'text-gray-500': electricUsageUnit !== 'wh' }"
+          >
+            Wh/km
+          </v-chip>
+        </div>
+      </div>
+
       <v-text-field
-        :model-value="kwhUsage.toFixed(3)"
-        @update:model-value="$emit('update:kwhUsage', parseFloat($event) || 0)"
-        label="Electric Usage"
-        suffix="kWh/km"
+        :model-value="displayElectricUsage"
+        @update:model-value="handleElectricUsageChange"
+        :label="`Electric Usage (${electricUsageUnit === 'kwh' ? 'kWh/km' : 'Wh/km'})`"
+        :suffix="electricUsageUnit === 'kwh' ? 'kWh/km' : 'Wh/km'"
         type="number"
-        step="0.001"
+        :step="electricUsageUnit === 'kwh' ? '0.001' : '1'"
         variant="outlined"
         color="green"
         class="text-field-mobile"
@@ -97,6 +131,10 @@ const props = defineProps({
   useLitersPer100km: {
     type: Boolean,
     default: false
+  },
+  isExpanded: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -104,12 +142,16 @@ const emit = defineEmits([
   'update:petrolPrice',
   'update:petrolUsage',
   'update:kwhUsage',
-  'update:useLitersPer100km'
+  'update:useLitersPer100km',
+  'update:isExpanded'
 ])
 
 // Track if user is currently editing
 const isEditing = ref(false)
 const inputValue = ref('')
+
+// Electric usage unit tracking
+const electricUsageUnit = ref('kwh')
 
 // Convert between km/l and l/100km
 const convertKmPerLiterToLitersPer100km = (kmPerL) => {
@@ -134,6 +176,15 @@ const displayPetrolUsage = computed(() => {
     return converted % 1 === 0 ? converted.toString() : converted.toFixed(1)
   }
   return props.petrolUsage % 1 === 0 ? props.petrolUsage.toString() : props.petrolUsage.toFixed(1)
+})
+
+// Display electric usage in the selected unit
+const displayElectricUsage = computed(() => {
+  if (electricUsageUnit.value === 'kwh') {
+    return props.kwhUsage
+  } else {
+    return Math.round(props.kwhUsage * 1000)
+  }
 })
 
 // Watch for unit changes and update display
@@ -177,6 +228,23 @@ const handleBlur = () => {
   // Ensure we have a valid value
   if (props.petrolUsage === 0) {
     emit('update:petrolUsage', 0)
+  }
+}
+
+// Handle electric usage unit change
+const handleElectricUnitChange = (newUnit) => {
+  electricUsageUnit.value = newUnit
+}
+
+// Handle electric usage value change
+const handleElectricUsageChange = (value) => {
+  const numericValue = parseFloat(value) || 0
+  
+  if (electricUsageUnit.value === 'kwh') {
+    emit('update:kwhUsage', numericValue)
+  } else {
+    // Convert Wh/km to kWh/km
+    emit('update:kwhUsage', numericValue / 1000)
   }
 }
 </script>
