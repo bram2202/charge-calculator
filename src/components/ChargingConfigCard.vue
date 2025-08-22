@@ -1,12 +1,19 @@
 <template>
   <v-card variant="outlined" class="h-full rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 border-gray-200 mt-3 sm:mt-6">
-    <v-card-title class="bg-gradient-to-r from-purple-50 to-purple-100 text-purple-800 py-4 px-4 sm:px-6 rounded-t-xl">
-      <div class="flex items-center gap-2">
-        <v-icon icon="mdi-ev-plug-type2" size="24" />
-        <span class="text-lg sm:text-xl font-semibold">Charging Settings</span>
+    <v-card-title class="bg-gradient-to-r from-purple-50 to-purple-100 text-purple-800 py-4 px-4 sm:px-6 rounded-t-xl cursor-pointer" @click="$emit('update:isExpanded', !isExpanded)">
+      <div class="flex items-center justify-between w-full">
+        <div class="flex items-center gap-2">
+          <v-icon icon="mdi-ev-plug-type2" size="24" />
+          <span class="text-lg sm:text-xl font-semibold">Charging Settings</span>
+        </div>
+        <v-icon 
+          :icon="isExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down'" 
+          size="24" 
+          class="transition-transform duration-200"
+        />
       </div>
     </v-card-title>
-    <v-card-text class="p-4 sm:p-6 space-y-4 sm:space-y-5">
+    <v-card-text v-show="isExpanded" class="p-4 sm:p-6 space-y-4 sm:space-y-5">
       <!-- Car Phases -->
       <div class="mb-4">
         <label class="text-sm font-medium text-gray-500 mb-2 block">Car Type</label>
@@ -76,12 +83,16 @@ const props = defineProps({
   chargingPower: {
     type: Number,
     required: true
+  },
+  isExpanded: {
+    type: Boolean,
+    default: true
   }
 })
 
-const emit = defineEmits(['update:carPhases', 'update:chargingPower'])
+const emit = defineEmits(['update:carPhases', 'update:chargingPower', 'update:isExpanded'])
 
-const { carPhases, chargingPower } = toRefs(props)
+const { carPhases, chargingPower, isExpanded } = toRefs(props)
 
 const localCarPhases = computed({
   get: () => carPhases.value,
