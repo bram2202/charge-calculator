@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2025-11-20
+
+### Build
+
+- **deps-dev**: Bump vite from 7.0.6 to 7.1.5
+- **deps-dev**: Bump glob from 10.4.5 to 10.5.0
+- **deps-dev**: Bump vite from 7.1.5 to 7.1.11
+
 ## [1.3.0] - 2025-08-22
 
 ### 🚀 Features
