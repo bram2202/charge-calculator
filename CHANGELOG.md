@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.4] - 2026-11-15
+
+### Build
+
+- **deps-dev**: Bump postcss from 8.5.15 to 8.5.25
+- **deps-dev**: Bump tar from 7.5.11 to 7.5.22
+- **deps**: Bump esbuild, @vitejs/plugin-vue and vite
+- **deps-dev**: Bump ws from 8.18.3 to 8.21.1
+- **deps-dev**: Bump vitest from 4.1.8 to 4.1.11
+- **deps-dev**: Bump browserslist from 4.25.1 to 4.28.9
+- **deps**: Bump nanoid from 3.3.16 to 3.3.19
+- **deps**: Bump source-map-js from 1.2.1 to 1.2.2
+- **deps-dev**: Bump vite from 8.0.16 to 8.3.5
+- **deps**: Bump @vue/server-renderer and vue
+
 ## [1.3.3] - 2026-06-12
 
 ### Build
